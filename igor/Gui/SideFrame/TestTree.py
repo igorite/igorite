@@ -3,10 +3,9 @@ from os import path
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, QTreeWidget, QTreeWidgetItem, \
-    QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem, QLabel, QPushButton
+from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
 from robot.api import TestData
-from robot.parsing.model import TestCaseFile, TestCase
+from robot.parsing.model import TestCaseFile
 
 
 class TestTree(QTreeWidget):

@@ -1,11 +1,7 @@
-import os
-from os import path
-
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, QTreeWidget, QTreeWidgetItem, \
-    QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem, QLabel, QPushButton
-from igor.Gui.SideFrame.TestTree import TestTree
+from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
 from igor.Gui.SideFrame.KeywordTree import KeywordTree
+from igor.Gui.SideFrame.TestTree import TestTree
 
 
 class SideFrame(QFrame):

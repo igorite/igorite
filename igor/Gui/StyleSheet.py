@@ -4,7 +4,6 @@ style_sheet = """
              }
     
     QLabel{
-        background-color: #000;
         color: #DDDDDD;
         font-size: 16px
              }  
@@ -149,6 +148,10 @@ SideFrameTitleFrame{
 }
 
 SideFrameTitleFrame QPushButton{
+    background-color: #202020;
+}
+
+SideFrameTitleFrame QLabel{
     background-color: #202020;
 }
 

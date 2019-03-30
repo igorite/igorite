@@ -9,7 +9,7 @@ from robot.api import TestData
 from robot.parsing.model import TestCaseFile, TestCase
 
 from igor.Gui.StyleSheet import style_sheet
-from igor.RobotRun import RobotRun
+from igor.Core import RobotRun
 
 
 class MainWindow(QMainWindow):

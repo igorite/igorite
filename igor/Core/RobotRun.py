@@ -18,7 +18,6 @@ class RunnerListener:
 
     def __init__(self, signal):
         self.stream = signal
-        pass
 
     def start_test(self, data, result):
         pass

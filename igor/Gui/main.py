@@ -5,7 +5,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem
-from robot.parsing.model import TestCase
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 

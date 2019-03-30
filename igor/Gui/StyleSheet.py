@@ -2,7 +2,12 @@ style_sheet = """
     MainFrame{
         background-color: #000;
              }
-             
+    
+    QLabel{
+        background-color: #000;
+        color: #DDDDDD;
+        font-size: 16px
+             }  
     .TestTreeWidget{
         background-color: #505050;
         color: red
@@ -37,7 +42,7 @@ style_sheet = """
     }
     
     StepsContainer{
-        background-color: #10101 0;
+        background-color: #101010 0;
     }
     
     QTabWidget::pane { 
@@ -133,15 +138,19 @@ QTableWidget{
     background: #202020;
     color: #DDDDDD;
     font-size:14 px
-
-
 }
 
 QTableView QTableCornerButton::section {
     background: #202020;
 }
 
+SideFrameTitleFrame{
+    background-color: #202020;
+}
 
+SideFrameTitleFrame QPushButton{
+    background-color: #202020;
+}
 
 
 

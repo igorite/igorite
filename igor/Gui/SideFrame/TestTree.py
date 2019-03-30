@@ -34,11 +34,11 @@ class TestTree(QTreeWidget):
         self.root = QTreeWidgetItem()
         self.root.setText(0, self.source.name)
         self.root.setFlags(self.root.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsTristate)
-        self.get_child_suites(self.source, self.root)
+        self.get_child_data(self.source, self.root)
         self.addTopLevelItem(self.root)
         self.root.setExpanded(True)
 
-    def get_child_suites(self, suite, root):
+    def get_child_data(self, suite, root):
         for children in suite.children:
             self.test_dict[children.name] = children
             child = QTreeWidgetItem()
@@ -48,16 +48,19 @@ class TestTree(QTreeWidget):
             child.setCheckState(0, Qt.Unchecked)
             child.setText(0, children.name)
             if children.children or children.testcase_table:
-                self.get_child_suites(children, child)
+                self.get_child_data(children, child)
             root.addChild(child)
         for test in suite.testcase_table:
-            self.test_dict[test.name] = test
-            child = TestTreeWidget()
-            child.setIcon(0, self.test_icon)
-            child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
-            child.setCheckState(0, Qt.Unchecked)
-            child.setText(0, test.name)
-            root.addChild(child)
+            self.add_test_case(test, root)
+
+    def add_test_case(self, test, root):
+        self.test_dict[test.name] = test
+        child = TestTreeWidget()
+        child.setIcon(0, self.test_icon)
+        child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
+        child.setCheckState(0, Qt.Unchecked)
+        child.setText(0, test.name)
+        root.addChild(child)
 
     def item_clicked_open(self, item):
         if self.test_dict[item.text(0)]:

@@ -21,7 +21,7 @@ class TestTree(QTreeWidget):
         self.id = 0
         self.root = None
         self.source = None
-        self.suite_icon = QIcon(path.join(self.path, '..', 'images', 'icon.png'))
+        self.suite_icon = QIcon(path.join(self.path, '..', 'images', 'folder_icon.png'))
         self.test_icon = QIcon(path.join(self.path, '..', 'images', 'test_icon.png'))
 
         self.open_directory()
@@ -43,7 +43,6 @@ class TestTree(QTreeWidget):
         for children in suite.children:
             self.test_dict[children.name] = children
             child = QTreeWidgetItem()
-
             if isinstance(children, TestCaseFile):
                 child.setIcon(0, self.suite_icon)
             child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)

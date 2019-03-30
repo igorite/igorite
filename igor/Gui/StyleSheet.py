@@ -69,12 +69,15 @@ style_sheet = """
     QTreeView{
         background-color: #101010;
         border: 1px solid #303030;
-        color: #6060FF;
+        color: #BBB;
         show-decoration-selected: 1;
         }
 
     QTreeView:item:has-children{
         color: #BBB
+    }
+    QTreeView FolderTreeWidget{
+        color: #FF0000;
     }
     
     QTreeView::indicator{

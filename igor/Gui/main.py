@@ -81,6 +81,7 @@ class MainPanel(QTabWidget):
     def open_tab(self, robot_data):
 
         self.addTab(TestPanel(robot_data), self.test_icon, robot_data.name)
+        self.setCurrentIndex(self.count()-1)
         if self.count() >= 1:
             self.setTabsClosable(True)
 
@@ -102,7 +103,6 @@ class TestPanel(QFrame):
          :type test_data: TestCase
         """
         self.test_data = test_data
-        print(type(test_data))
         QFrame.__init__(self)
         self.layout = QHBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -136,7 +136,6 @@ class StepsContainer(QFrame):
     def add_steps(self):
         i = 0
         for step in self.test_case.steps:
-            print(step)
             sed = QTableWidgetItem()
             sed.setText(step.name)
             self.steps_table.setItem(i, 0, sed)

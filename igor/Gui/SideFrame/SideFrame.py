@@ -1,12 +1,9 @@
 import os
 from os import path
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, QTreeWidget, QTreeWidgetItem, \
     QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem, QLabel, QPushButton
-from robot.api import TestData
-from robot.parsing.model import TestCaseFile, TestCase
 from igor.Gui.SideFrame.TestTree import TestTree
 from igor.Gui.SideFrame.KeywordTree import KeywordTree
 
@@ -57,6 +54,7 @@ class SideFrameTitleFrame(QFrame):
         QFrame.__init__(self)
         self.label = QLabel(title)
         self.close_button = QPushButton()
+        self.close_button.setMaximumSize(QSize(20, 20))
 
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.label)

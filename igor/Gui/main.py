@@ -1,13 +1,15 @@
 import os
 from os import path
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, QTreeWidget, QTreeWidgetItem, \
     QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem
-from igor.RobotRun import RobotRun
 from robot.api import TestData
 from robot.parsing.model import TestCaseFile, TestCase
+
 from igor.Gui.StyleSheet import style_sheet
+from igor.RobotRun import RobotRun
 
 
 class MainWindow(QMainWindow):
@@ -26,7 +28,6 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(path.join(self.path, 'images', 'IgorIcon.png')))
 
     def run_tests(self):
-
         runner = self.main_frame.main_panel.open_runner()
         robot_run = RobotRun(self.main_frame.main_tree.source.source)
 
@@ -38,7 +39,7 @@ class Toolbar(QToolBar):
         QToolBar.__init__(self)
         self.setMovable(False)
         self.path = os.path.abspath(path.dirname(__file__))
-        self.play = QAction(QIcon(path.join(self.path, 'images', 'test_icon.png')), 'Run', self)
+        self.play = QAction(QIcon(path.join(self.path, 'images', 'Play.png')), 'Run', self)
         self.play.triggered.connect(self.parent.run_tests)
         self.addAction(self.play)
 
@@ -79,16 +80,17 @@ class MainTree(QTreeWidget):
         self.open_directory()
         self.itemDoubleClicked.connect(self.item_clicked_open)
         font = QFont()
-        font.setPointSize(10)
+        font.setPointSize(13)
         self.setFont(font)
 
     def open_directory(self, filepath=None):
-        self.source = TestData(source='..\\demo testcases')
+        self.source = TestData(source='C:\\Users\\3l1n\\Desktop\\RobotDemo-master')
         self.root = QTreeWidgetItem()
         self.root.setText(0, self.source.name)
         self.root.setFlags(self.root.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsTristate)
         self.get_child_suites(self.source, self.root)
         self.addTopLevelItem(self.root)
+        self.root.setExpanded(True)
 
     def get_child_suites(self, suite, root):
         for children in suite.children:
@@ -128,6 +130,7 @@ class MainPanel(QTabWidget):
         self.setMovable(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.runner = None
+        self.welcome_tab()
 
     def close_tab(self, p_int):
         if self.count() <= 2:
@@ -144,6 +147,9 @@ class MainPanel(QTabWidget):
         self.runner = Runner()
         self.addTab(self.runner, self.test_icon, 'Run')
         return self.runner
+
+    def welcome_tab(self):
+        self.addTab(QFrame(), self.test_icon, 'Open')
 
 
 class TestPanel(QFrame):
@@ -182,7 +188,7 @@ class StepsContainer(QFrame):
         self.steps_table.alternatingRowColors()
         self.steps_table.setRowCount(5)
         self.steps_table.setColumnCount(20)
-        self.steps_table.setMinimumSize(800,800)
+        self.steps_table.setMinimumSize(800, 800)
         self.layout.addWidget(self.steps_table)
         self.add_steps()
 
@@ -206,7 +212,7 @@ class Runner(QFrame):
         self.stream = QPlainTextEdit()
         self.stream.setObjectName('stream')
         # self.stream.setEnabled(False)
-        self.layout.addWidget(self.stream)
+        self.layout.addWidget(self.stream, 0, Qt.AlignCenter)
 
     def add_text(self, text):
         self.stream.appendPlainText(text)

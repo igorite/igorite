@@ -16,7 +16,9 @@ style_sheet = """
         background-color: #302020;
         border: 0px
     }
-    
+    QFrame{
+        background-color: #151515;
+    }
     Toolbar{
         background-color: #151515;
         border: 0px
@@ -47,14 +49,19 @@ style_sheet = """
         padding: 8px
     }
     QTabBar{
-        background-color: #000000
+        background-color: #000000;
+        
     }
     
-    QTabBar::tab:selected{
+    QTabBar::tab:selected, QTabBar::tab:hover{
          background-color: #303030;
          border: 3px solid #303030;
          border-bottom-color: #903030;
     }
+    QTabBar::close-button{
+        image: url(Gui/images/close.png)
+    }
+
     QTreeView{
         background-color: #101010;
         border: 1px solid #303030;
@@ -66,8 +73,16 @@ style_sheet = """
         color: #BBB
     }
     
+    QTreeView::indicator{
+        background-color: #202020; 
+    }
     QTreeView::indicator:checked{
-        background-color: #700000;
+        background-color: #101010;
+        border-image: url(Gui/images/Play.png) 0;
+    }
+    QTreeView::indicator:indeterminate{
+        background-color: #101010;
+        border-image: url(Gui/images/SemiPlay.png) 0;
     }
     QHeaderView{
         background-color: #202020;
@@ -87,41 +102,43 @@ style_sheet = """
         }
 
     QScrollBar:horizontal {
-    border: 2px solid grey;
-    background: #32CC99;
+    border: 0;
+    background: #404040;
     height: 15px;
-    margin: 0px 20px 0 20px;
 }
 QScrollBar::handle:horizontal {
-    background: white;
+    background: #404040;
     min-width: 20px;
 }
 QScrollBar::add-line:horizontal {
-    border: 2px solid grey;
-    background: #32CC99;
-    width: 20px;
+    border: 0px solid grey;
+    background: #404040;
+    width: 0px;
     subcontrol-position: right;
     subcontrol-origin: margin;
 }
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: #202020;
+}
 
 QScrollBar::sub-line:horizontal {
-    border: 2px solid grey;
-    background: #32CC99;
-    width: 20px;
+    border: 0px solid grey;
+    background: #404040;
+    width: 0px;
     subcontrol-position: left;
     subcontrol-origin: margin;
 }
 
 QTableWidget{
     background: #202020;
-    color: #DDDDDD
+    color: #DDDDDD;
+    font-size:14 px
 
 
 }
 
 QTableView QTableCornerButton::section {
-    background: red;
-    border: 2px outset red;
+    background: #202020;
 }
 
 

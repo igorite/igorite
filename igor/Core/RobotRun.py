@@ -1,6 +1,5 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from robot.run import run
-import time
 
 
 class RobotRun(QThread):
@@ -27,14 +26,14 @@ class RunnerListener:
         pass
 
     def start_test(self, name, attributes):
-        self.stream.emit(str(attributes['starttime']) + ' :INFO: ' + str(attributes['longname']))
+        self.stream.emit(str(attributes['starttime']) + ' ::INFO:: ' + str(attributes['longname']))
         pass
 
     def end_test(self, name, attributes):
         pass
 
     def start_keyword(self, name, attributes):
-        self.stream.emit(str(attributes['starttime']) +' ::INFO:: '+ str(attributes['kwname']))
+        self.stream.emit(str(attributes['starttime']) + ' ::INFO:: ' + str(attributes['kwname']))
         pass
 
     def end_keyword(self, name, attributes):

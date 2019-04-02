@@ -158,7 +158,9 @@ SideFrameTitleFrame QLabel{
     background-color: #202020;
 }
 
-
+ QPlainTextEdit{
+    font-size: 18px
+ }
 
 
 """

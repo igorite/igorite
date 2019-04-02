@@ -1,5 +1,6 @@
 import os
 from os import path
+import time
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
@@ -7,6 +8,7 @@ from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
+from igor.Core.RobotRun import RobotRun
 
 
 class MainWindow(QMainWindow):
@@ -23,11 +25,13 @@ class MainWindow(QMainWindow):
         self.toolbar = self.addToolBar(Toolbar(self))
         self.path = os.path.abspath(path.dirname(__file__))
         self.setWindowIcon(QIcon(path.join(self.path, 'images', 'IgorIcon.png')))
+        self.robot_run = None
 
     def run_tests(self):
-        # runner = self.main_frame.main_panel.open_runner()
-        # robot_run = RobotRun(self.main_frame.side_frame.tree.source.source)
-        pass
+        runner = self.main_frame.main_panel.open_runner()
+        self.robot_run = RobotRun(self.main_frame.side_frame.test_tree.source.source)
+        self.robot_run.signal.connect(runner.add_text)
+        self.robot_run.start()
 
 
 class Toolbar(QToolBar):
@@ -87,6 +91,9 @@ class MainPanel(QTabWidget):
     def open_runner(self):
         self.runner = Runner()
         self.addTab(self.runner, self.test_icon, 'Run')
+        self.setCurrentIndex(self.count() - 1)
+        if self.count() >= 1:
+            self.setTabsClosable(True)
         return self.runner
 
     def welcome_tab(self):
@@ -151,7 +158,7 @@ class Runner(QFrame):
         self.stream = QPlainTextEdit()
         self.stream.setObjectName('stream')
         # self.stream.setEnabled(False)
-        self.layout.addWidget(self.stream, 0, Qt.AlignCenter)
+        self.layout.addWidget(self.stream)
 
     def add_text(self, text):
         self.stream.appendPlainText(text)

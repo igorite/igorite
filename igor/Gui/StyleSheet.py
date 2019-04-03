@@ -159,7 +159,7 @@ SideFrameTitleFrame QLabel{
 }
 
  QPlainTextEdit{
-    font-size: 18px
+    font-size: 10px
  }
 
 

@@ -15,16 +15,15 @@ class MainWindow(QMainWindow):
     def __init__(self, ):
         QMainWindow.__init__(self)
 
-        self.setGeometry(300, 300, 300, 300)
+        self.setGeometry(800, 300, 300, 300)
         self.setWindowTitle('Igor')
         self.setStyleSheet(style_sheet)
-        self.showMaximized()
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
         self.toolbar = self.addToolBar(Toolbar(self))
         self.path = os.path.abspath(path.dirname(__file__))
-        self.setWindowIcon(QIcon(path.join(self.path, 'images', 'IgorIcon.png')))
         self.robot_run = None
+        self.showMaximized()
 
     def run_tests(self):
         runner = self.main_frame.main_panel.open_runner()

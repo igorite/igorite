@@ -2,6 +2,25 @@ style_sheet = """
     MainFrame{
         background-color: #000;
              }
+
+     QMenuBar {
+            background-color: #151515;
+            color: #BBB;
+        }
+
+        QMenuBar::item::selected {
+            background-color: #303030;
+        }
+
+        QMenu {
+            background-color: #151515;
+            color: #BBB;
+            border: 1px solid #303030;           
+        }
+
+        QMenu::item::selected {
+            background-color: #303030;
+        }
     
     QLabel{
         color: #DDDDDD;

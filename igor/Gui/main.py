@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Core.RobotRun import RobotRun
+from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
+from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
 
 
 class MainWindow(QMainWindow):
@@ -16,13 +18,17 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)
 
         self.setGeometry(800, 300, 300, 300)
-        self.setWindowTitle('Igor')
+        self.setWindowTitle('Dánao')
         self.setStyleSheet(style_sheet)
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
         self.toolbar = self.addToolBar(Toolbar(self))
         self.path = os.path.abspath(path.dirname(__file__))
         self.robot_run = None
+        self.load = None
+        self.run_options = None
+        self.menu = None
+        self.add_menu()
         self.showMaximized()
 
     def run_tests(self):
@@ -30,6 +36,28 @@ class MainWindow(QMainWindow):
         self.robot_run = RobotRun(self.main_frame.side_frame.test_tree.source.source)
         self.robot_run.signal.connect(runner.add_text)
         self.robot_run.start()
+
+    def open_run_tests(self):
+        self.run_options = RunOptionsWindow()
+
+    def add_menu(self):
+        self.menu = self.menuBar()
+        # File Menu
+        file_menu = self.menu.addMenu('File')
+
+        load_project_action = QAction('Load Project', file_menu)
+        load_project_action.setShortcut('Ctrl+O')
+        load_project_action.triggered.connect(self.load_project)
+        file_menu.addAction(load_project_action)
+
+        # Create Run menu
+        run_menu = self.menu.addMenu('Run')
+
+        # Create help menu
+        help_menu = self.menu.addMenu('Help')
+
+    def load_project(self):
+        self.load = LoadProjectWindow()
 
 
 class Toolbar(QToolBar):
@@ -39,9 +67,14 @@ class Toolbar(QToolBar):
         QToolBar.__init__(self)
         self.setMovable(False)
         self.path = os.path.abspath(path.dirname(__file__))
+        # Create Play button
         self.play = QAction(QIcon(path.join(self.path, 'images', 'Play.png')), 'Run', self)
         self.play.triggered.connect(self.parent.run_tests)
         self.addAction(self.play)
+        # Create Run button
+        self.run_button = QAction(QIcon(path.join(self.path, 'images', 'Play.png')), 'Run', self)
+        self.run_button.triggered.connect(self.parent.open_run_tests)
+        self.addAction(self.run_button)
 
 
 class MainFrame(QFrame):

@@ -8,4 +8,4 @@ class TestTabPanel(QTabWidget):
     def __init__(self, test_data):
         QTabWidget.__init__(self)
         self.addTab(TestPanel(test_data), 'Grid')
-        self.addTab(TestTextEditor(), 'Test Editor')
+        self.addTab(TestTextEditor(test_data), 'Test Editor')

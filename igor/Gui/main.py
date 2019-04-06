@@ -1,10 +1,11 @@
 import os
+import ctypes
 from os import path
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt , QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QSystemTrayIcon
 from igor.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
 from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
@@ -17,14 +18,21 @@ class MainWindow(QMainWindow):
 
     def __init__(self, ):
         QMainWindow.__init__(self)
-
+        self.path = os.path.abspath(path.dirname(__file__))
         self.setGeometry(800, 300, 300, 300)
         self.setWindowTitle('Dánao')
+
+        self.app_icon = QIcon(os.path.join(self.path, 'images', 'IgorIcon.png'))
+
+        self.setWindowIcon(self.app_icon)
+        trayIcon = QSystemTrayIcon(self.app_icon)
+        trayIcon.show()
+
+
         self.setStyleSheet(style_sheet)
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
         self.toolbar = self.addToolBar(Toolbar(self))
-        self.path = os.path.abspath(path.dirname(__file__))
         self.robot_run = None
         self.load = None
         self.run_options = None

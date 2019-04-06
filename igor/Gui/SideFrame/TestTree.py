@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
 from robot.api import TestData
-from robot.parsing.model import TestCaseFile
+from robot.parsing.model import TestCaseFile, TestCase
 
 
 class TestTree(QTreeWidget):
@@ -63,7 +63,7 @@ class TestTree(QTreeWidget):
         root.addChild(child)
 
     def item_clicked_open(self, item):
-        if self.test_dict[item.text(0)]:
+        if isinstance(self.test_dict[item.text(0)],TestCase) :
             self.main_frame.main_panel.open_tab(self.test_dict[item.text(0)])
         else:
             pass

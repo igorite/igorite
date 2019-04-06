@@ -4,12 +4,13 @@ from os import path
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QVBoxLayout, QAction, QToolBar, QPlainTextEdit, QTableWidget, QTableWidgetItem
+    QTabWidget, QAction, QToolBar, QPlainTextEdit
+from igor.Core.RobotRun import RobotRun
+from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
+from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
-from igor.Core.RobotRun import RobotRun
-from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
-from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
+from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
 
 
 class MainWindow(QMainWindow):
@@ -114,7 +115,7 @@ class MainPanel(QTabWidget):
 
     def open_tab(self, robot_data):
 
-        self.addTab(TestPanel(robot_data), self.test_icon, robot_data.name)
+        self.addTab(TestTabPanel(robot_data), self.test_icon, robot_data.name)
         self.setCurrentIndex(self.count()-1)
         if self.count() >= 1:
             self.setTabsClosable(True)
@@ -129,54 +130,6 @@ class MainPanel(QTabWidget):
 
     def welcome_tab(self):
         self.addTab(QFrame(), self.test_icon, 'Open')
-
-
-class TestPanel(QFrame):
-
-    def __init__(self, test_data):
-        """
-
-        :param test_data:
-         :type test_data: TestCase
-        """
-        self.test_data = test_data
-        QFrame.__init__(self)
-        self.layout = QHBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-        step_container = StepsContainer(test_data, self)
-        self.layout.addWidget(step_container)
-
-
-class StepsContainer(QFrame):
-
-    def __init__(self, test_case, parent):
-        """
-
-        :param test_case:
-        :type test_case: TestCase
-        """
-        QFrame.__init__(self)
-        self.parent = parent
-        self.test_case = test_case
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-        self.steps_table = QTableWidget()
-        self.steps_table.alternatingRowColors()
-        self.steps_table.setRowCount(5)
-        self.steps_table.setColumnCount(20)
-        self.steps_table.setMinimumSize(80, 800)
-        self.layout.addWidget(self.steps_table)
-        self.add_steps()
-
-    def add_steps(self):
-        i = 0
-        for step in self.test_case.steps:
-            sed = QTableWidgetItem()
-            sed.setText(step.name)
-            self.steps_table.setItem(i, 0, sed)
-            i += 1
 
 
 class Runner(QFrame):

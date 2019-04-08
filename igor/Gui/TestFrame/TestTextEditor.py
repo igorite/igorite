@@ -27,6 +27,7 @@ class TestTextEditor(QFrame):
         self.setLayout(self.layout)
         self.lexer.styleText(0, self.editor.length())
 
+
 class RobotFrameworkLexer(QsciLexerCustom):
 
     def __init__(self, parent):

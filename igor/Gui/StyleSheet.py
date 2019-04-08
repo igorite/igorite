@@ -7,6 +7,16 @@ style_sheet = """
             background-color: #151515;
             color: #BBB;
         }
+    QMessageBox {
+    background-color: #151515;
+}
+
+    QPushButton{
+    background-color: #151515;
+    color: #DDD;
+    border: 1px solid #606060;
+    padding: 5px;
+    }
 
         QMenuBar::item::selected {
             background-color: #303030;

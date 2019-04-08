@@ -5,7 +5,7 @@ from os import path
 from PyQt5.QtCore import Qt , QSize
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QSystemTrayIcon
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox
 from igor.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
 from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
@@ -25,9 +25,6 @@ class MainWindow(QMainWindow):
         self.app_icon = QIcon(os.path.join(self.path, 'images', 'IgorIcon.png'))
 
         self.setWindowIcon(self.app_icon)
-        trayIcon = QSystemTrayIcon(self.app_icon)
-        trayIcon.show()
-
 
         self.setStyleSheet(style_sheet)
         self.main_frame = MainFrame()
@@ -39,6 +36,8 @@ class MainWindow(QMainWindow):
         self.menu = None
         self.add_menu()
         self.showMaximized()
+
+
 
     def run_tests(self):
         runner = self.main_frame.main_panel.open_runner()
@@ -67,6 +66,20 @@ class MainWindow(QMainWindow):
 
     def load_project(self):
         self.load = LoadProjectWindow()
+
+    def closeEvent(self, event):
+        """Generate 'question' dialog on clicking 'X' button in title bar.
+
+        Reimplement the closeEvent() event handler to include a 'Question'
+        dialog with options on how to proceed - Save, Close, Cancel buttons
+        """
+
+        reply = QMessageBox.question(
+            self, "Message",
+            "Are you sure you want to quit? Any unsaved work will be lost.",
+            QMessageBox.Save | QMessageBox.Close | QMessageBox.Cancel,
+            QMessageBox.Save)
+
 
 
 class Toolbar(QToolBar):

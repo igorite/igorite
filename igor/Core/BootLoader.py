@@ -30,7 +30,7 @@ class BootLoader:
         pass
 
     def load_configuration(self):
-        with open(os.path.join(os.path.dirname(__file__),'default.json')) as json_file:
+        with open(os.path.join(os.path.dirname(__file__), 'default.json')) as json_file:
             self.configuration = json.load(json_file)
 
     def load_main_window(self):

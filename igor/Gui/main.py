@@ -5,8 +5,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox
 from igor.Core.RobotRun import RobotRun
-from igor.Gui.PopUpWindows.LoadProjectWindow import LoadProjectWindow
-from igor.Gui.PopUpWindows.RunOptionsWindow import RunOptionsWindow
+from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
@@ -32,6 +31,7 @@ class MainWindow(QMainWindow):
         self.load = None
         self.run_options = None
         self.menu = None
+        self.project_window = None
         self.add_menu()
         self.showMaximized()
 
@@ -49,10 +49,18 @@ class MainWindow(QMainWindow):
         # File Menu
         file_menu = self.menu.addMenu('File')
 
+        create_project_action = QAction('New Project', file_menu)
+        create_project_action.setShortcut('Ctrl+N')
+        create_project_action.triggered.connect(self.create_project)
+        file_menu.addAction(create_project_action)
+
         load_project_action = QAction('Load Project', file_menu)
         load_project_action.setShortcut('Ctrl+O')
         load_project_action.triggered.connect(self.load_project)
         file_menu.addAction(load_project_action)
+
+    def create_project(self):
+        self.project_window = CreateProjectWindow()
 
     def load_project(self):
         self.load = LoadProjectWindow()
@@ -63,12 +71,12 @@ class MainWindow(QMainWindow):
         Reimplement the closeEvent() event handler to include a 'Question'
         dialog with options on how to proceed - Save, Close, Cancel buttons
         """
-
-        reply = QMessageBox.question(
-            self, "Message",
-            "Are you sure you want to quit? Any unsaved work will be lost.",
-            QMessageBox.Save | QMessageBox.Close | QMessageBox.Cancel,
-            QMessageBox.Save)
+        close_window = QMessageBox()
+        reply = close_window.question(close_window,
+                                      "Message",
+                                      "Are you sure you want to quit? Any unsaved work will be lost.",
+                                      close_window.Save | close_window.Close | close_window.Cancel,
+                                      )
 
         if reply:
             pass

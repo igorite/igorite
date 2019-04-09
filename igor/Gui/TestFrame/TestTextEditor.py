@@ -61,7 +61,14 @@ class RobotFrameworkLexer(QsciLexerCustom):
         self.setFont(self.font, 1)  # Style 1: 14pt bold
         self.setFont(self.font, 2)  # Style 2: 14pt bold
 
+    @property
     def language(self):
+        """
+        This function return the language of the lexer
+
+        :return: Lexer language
+        :rtype: str
+        """
         return 'Robot Framework'
 
     def description(self, style):

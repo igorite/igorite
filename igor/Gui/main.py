@@ -1,8 +1,6 @@
 import os
-import ctypes
 from os import path
-
-from PyQt5.QtCore import Qt , QSize
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox
@@ -37,8 +35,6 @@ class MainWindow(QMainWindow):
         self.add_menu()
         self.showMaximized()
 
-
-
     def run_tests(self):
         runner = self.main_frame.main_panel.open_runner()
         self.robot_run = RobotRun(self.main_frame.side_frame.test_tree.source.source)
@@ -58,12 +54,6 @@ class MainWindow(QMainWindow):
         load_project_action.triggered.connect(self.load_project)
         file_menu.addAction(load_project_action)
 
-        # Create Run menu
-        run_menu = self.menu.addMenu('Run')
-
-        # Create help menu
-        help_menu = self.menu.addMenu('Help')
-
     def load_project(self):
         self.load = LoadProjectWindow()
 
@@ -80,6 +70,8 @@ class MainWindow(QMainWindow):
             QMessageBox.Save | QMessageBox.Close | QMessageBox.Cancel,
             QMessageBox.Save)
 
+        if reply:
+            pass
 
 
 class Toolbar(QToolBar):

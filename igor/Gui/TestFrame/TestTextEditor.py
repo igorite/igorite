@@ -25,7 +25,6 @@ class TestTextEditor(QFrame):
         self.layout = QHBoxLayout()
         self.layout.addWidget(self.editor)
         self.setLayout(self.layout)
-        self.lexer.styleText(0, self.editor.length())
 
 
 class RobotFrameworkLexer(QsciLexerCustom):
@@ -84,33 +83,28 @@ class RobotFrameworkLexer(QsciLexerCustom):
     def styleText(self, start, end):
         # 1. Initialize the styling procedure
         # ------------------------------------
-        self.startStyling(start)
+        self.startStyling(0)
 
         # 2. Slice out a part from the text
         # ----------------------------------
         text = self.parent.text()[start:end]
         # 3. Tokenize the text
         # ---------------------
-        p = re.compile(r"")
-        token_list = [(token, len(bytearray(token, "utf-8"))) for token in p.findall(text)]
-        # -> 'token_list' is a list of tuples: (token_name, token_len)
+        text_length = len(text)
+        print (text_length)
+        text_lines = text.splitlines()
+        print(len(text_lines))
+        word = ''
 
-        # 4. Style the text in a loop
-        # ----------------------------
-        # self.setStyling(number_of_chars, style_nr)
-        #
-        for i, token in enumerate(token_list):
-            if token[0] in ["*** Settings ***",
-                            "*** Test Cases ***",
-                            "*** Keywords ***",
-                            "*** Variables ***"]:
-                # Title Style
-                self.setStyling(token[1], 1)
+        for line in text_lines:
+            word = ''
+            for character in range(len(line)):
+                word = word + text[character]
+                if word in ['*** Settings ***', '*** Test Cases ***','*** Keywords ***']:
+                    self.setStyling(len(word), 1)
+                    word = ''
+                    print('len:' +str(len(word)))
 
-            elif token[0] in ["[Template]"]:
-                self.setStyling(token[1], 2)
-            else:
-                # Default style
-                self.setStyling(token[1], 0)
-            ###
-        ###
+            self.setStyling(len(word)+1, 0)
+
+

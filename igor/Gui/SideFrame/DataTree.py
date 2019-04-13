@@ -94,7 +94,6 @@ class TestTree(QTreeWidget):
         self.test_dict[keyword.name] = keyword
         child = KeywordTreeWidget()
         child.setIcon(0, self.keyword_icon)
-        child.setCheckState(0, Qt.Unchecked)
         child.setText(0, keyword.name)
         root.addChild(child)
 
@@ -102,7 +101,6 @@ class TestTree(QTreeWidget):
         self.test_dict[variable.name] = variable
         child = TestTreeWidget()
         child.setIcon(0, self.variable_icon)
-        child.setCheckState(0, Qt.Unchecked)
         child.setText(0, variable.name)
         root.addChild(child)
 

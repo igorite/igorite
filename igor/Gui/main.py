@@ -3,7 +3,7 @@ from os import path
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QPushButton, QToolButton
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton
 from igor.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
@@ -168,6 +168,7 @@ class Runner(QFrame):
     def add_text(self, text):
         self.stream.appendPlainText(text)
 
+
 class WelcomeTab(QFrame):
 
     def __init__(self):
@@ -178,7 +179,7 @@ class WelcomeTab(QFrame):
         self.font = QFont()
         self.font.setPointSize(16)
 
-        #Create Open Button
+        # Create Open Button
         self.open_button = QToolButton()
         self.open_button.setFont(self.font)
         self.open_button.setText('Open Project')

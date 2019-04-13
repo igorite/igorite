@@ -209,4 +209,14 @@ QToolButton{
     color: #DDDDDD;
     border: 2px solid #303030;
 }
+
+QTextEdit{
+    color: #DDD;
+}
+
+QListView {
+    background-color: #151515;
+    color: #DDDDDD;
+    border: 2px solid #303030;
+}
 """

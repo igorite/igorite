@@ -1,7 +1,6 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
-from igor.Gui.SideFrame.KeywordTree import KeywordTree
-from igor.Gui.SideFrame.TestTree import TestTree
+from igor.Gui.SideFrame.DataTree import TestTree
 
 
 class SideFrame(QFrame):
@@ -10,8 +9,8 @@ class SideFrame(QFrame):
         QFrame.__init__(self)
         self.main_frame = parent
 
-        self.test_tree = TestTree(self)
-        self.keyword_tree = KeywordTree(self)
+        self.test_tree = TestTree(self, show_test=True, show_variable=True, show_keyword=True)
+        self.keyword_tree = TestTree(self,show_keyword=True, show_variable=True)
         self.tree_container = SideFrameContainer(self.test_tree, 'Test cases')
         self.keyword_tree_container = SideFrameContainer(self.keyword_tree, 'Keywords')
         self.layout = QVBoxLayout()

@@ -1,9 +1,9 @@
 import os
 from os import path
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QPushButton, QToolButton
 from igor.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
@@ -150,7 +150,7 @@ class MainPanel(QTabWidget):
         return self.runner
 
     def welcome_tab(self):
-        self.addTab(QFrame(), self.test_icon, 'Open')
+        self.addTab(WelcomeTab(), self.test_icon, 'Open')
 
 
 class Runner(QFrame):
@@ -167,3 +167,30 @@ class Runner(QFrame):
 
     def add_text(self, text):
         self.stream.appendPlainText(text)
+
+class WelcomeTab(QFrame):
+
+    def __init__(self):
+        QFrame.__init__(self)
+        self.path = os.path.abspath(path.dirname(__file__))
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        self.font = QFont()
+        self.font.setPointSize(16)
+
+        #Create Open Button
+        self.open_button = QToolButton()
+        self.open_button.setFont(self.font)
+        self.open_button.setText('Open Project')
+        self.open_button.setIcon(QIcon(path.join(self.path, 'images', 'new_icon.png')))
+        self.open_button.setIconSize(QSize(200, 200))
+        self.open_button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        self.layout.addWidget(self.open_button)
+
+        self.create_button = QToolButton()
+        self.create_button.setFont(self.font)
+        self.create_button.setText('Create Project')
+        self.create_button.setIcon(QIcon(path.join(self.path, 'images', 'variable_icon.png')))
+        self.create_button.setIconSize(QSize(200, 200))
+        self.create_button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        self.layout.addWidget(self.create_button)

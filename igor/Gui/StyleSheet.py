@@ -203,4 +203,10 @@ QLineEdit[WRONG=true]{
 PopUpWindow {
     background-color: #303030;
 }
+
+QToolButton{
+    background-color: #151515;
+    color: #DDDDDD;
+    border: 2px solid #303030;
+}
 """

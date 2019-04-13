@@ -191,5 +191,16 @@ SideFrameTitleFrame QLabel{
     font-size: 10px
  }
 
+QLineEdit{
+    background-color: #303030;
+    color: #FFFFFF;
+}
+QLineEdit[WRONG=true]{
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
 
+PopUpWindow {
+    background-color: #303030;
+}
 """

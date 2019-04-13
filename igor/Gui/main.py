@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)
         self.path = os.path.abspath(path.dirname(__file__))
         self.setGeometry(800, 300, 300, 300)
-        self.setWindowTitle('Dánao')
+        self.setWindowTitle('Igor')
 
         self.app_icon = QIcon(os.path.join(self.path, 'images', 'IgorIcon.png'))
 
@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 
-        Reimplement the closeEvent() event handler to include a 'Question'
+        Reimplemented the closeEvent() event handler to include a 'Question'
         dialog with options on how to proceed - Save, Close, Cancel buttons
         """
         close_window = QMessageBox()

@@ -100,7 +100,6 @@ class RobotFrameworkLexer(QsciLexerCustom):
         # self.setStyling(number_of_chars, style_nr)
         #
         for i, token in enumerate(token_list):
-            print(token)
             if token[0] in ["*** Settings ***",
                             "*** Test Cases ***",
                             "*** Keywords ***",

@@ -1,7 +1,6 @@
 from PyQt5.Qsci import *
 from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtWidgets import QFrame, QHBoxLayout
-import re
 
 
 class TestTextEditor(QFrame):
@@ -100,7 +99,7 @@ class RobotFrameworkLexer(QsciLexerCustom):
             word = ''
             for character in range(len(line)):
                 word = word + text[character]
-                if word in ['*** Settings ***', '*** Test Cases ***','*** Keywords ***']:
+                if word in ['*** Settings ***', '*** Test Cases ***', '*** Keywords ***']:
                     self.setStyling(len(word), 1)
                     word = ''
                     print('len:' +str(len(word)))

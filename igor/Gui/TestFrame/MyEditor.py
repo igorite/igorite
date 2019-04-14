@@ -1,5 +1,6 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QTextCursor, QStandardItemModel, QStandardItem, QIcon, QFont, QFontDatabase
+from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import (QTextCursor, QStandardItemModel, QStandardItem, QIcon, QFont,
+                         QFontDatabase, QSyntaxHighlighter, QTextCharFormat)
 from PyQt5.QtWidgets import QCompleter, QTextEdit
 from os import path
 from igor.Gui.StyleSheet import style_sheet
@@ -7,19 +8,21 @@ from igor.Gui.StyleSheet import style_sheet
 
 class TextEdit(QTextEdit):
 
-    def __init__(self,test_data, parent=None):
+    def __init__(self, test_data, parent=None):
         super(TextEdit, self).__init__(parent)
         self.test_data = test_data
         self.path = path.abspath(path.dirname(__file__))
+        with open(test_data.parent.source) as f:
+            file = f.read()
+            self.append(str(file))
 
         font_id = QFontDatabase.addApplicationFont(path.join(path.dirname(self.path),
                                                              'font',
                                                              'FiraCode-Medium.ttf'))
-        print(font_id)
         family = QFontDatabase.applicationFontFamilies(font_id)[0]
-        print(family)
+        self.highlighter = RobotFrameworkHighlighter(self)
         self.font = QFont()
-        self.font.setPointSize(20)
+        self.font.setPointSize(12)
         self.font.setFamily(family)
         self.setFont(self.font)
         self._completer = None
@@ -43,8 +46,7 @@ class TextEdit(QTextEdit):
             item.setData(keyword.name)
             item.setIcon(self.keyword_icon)
             print(self.items.rowCount())
-            self.items.setItem(self.items.rowCount(),item)
-
+            self.items.setItem(self.items.rowCount(), item)
 
     def set_completer(self, c):
         if self._completer is not None:
@@ -108,11 +110,10 @@ class TextEdit(QTextEdit):
         completion_prefix = self.text_under_cursor()
 
         if (not is_shortcut
-            and (has_modifier
-                 or len(e.text()) == 0
-                 or len(completion_prefix) < 2
-                 or e.text()[-1] in eow)):
-
+                and (has_modifier
+                     or len(e.text()) == 0
+                     or len(completion_prefix) < 2
+                     or e.text()[-1] in eow)):
             self._completer.popup().hide()
             return
 
@@ -120,9 +121,91 @@ class TextEdit(QTextEdit):
             self._completer.setCompletionPrefix(completion_prefix)
             self._completer_popup = self._completer.popup()
             self._completer.popup().setCurrentIndex(
-                    self._completer.completionModel().index(0, 0))
+                self._completer.completionModel().index(0, 0))
 
         cr = self.cursorRect()
         cr.setWidth(self._completer.popup().sizeHintForColumn(0)
                     + self._completer.popup().verticalScrollBar().sizeHint().width())
         self._completer.complete(cr)
+
+
+class RobotFrameworkHighlighter(QSyntaxHighlighter):
+    def __init__(self, parent=None):
+        super(RobotFrameworkHighlighter, self).__init__(parent)
+
+        keyword_format = QTextCharFormat()
+        keyword_format.setForeground(Qt.darkBlue)
+        keyword_format.setFontWeight(QFont.Bold)
+
+        keyword_patterns = ["\\bGiven\\b", "\\bWhen\\b", "\\band\\b",
+                            "\\bThen\\b", "\\benum\\b", "\\bexplicit\\b", "\\bfriend\\b",
+                            "\\binline\\b", "\\bint\\b", "\\blong\\b", "\\bnamespace\\b",
+                            "\\boperator\\b", "\\bprivate\\b", "\\bprotected\\b",
+                            "\\bpublic\\b", "\\bshort\\b", "\\bsignals\\b", "\\bsigned\\b",
+                            "\\bslots\\b", "\\bstatic\\b", "\\bstruct\\b",
+                            "\\btemplate\\b", "\\btypedef\\b", "\\btypename\\b",
+                            "\\bunion\\b", "\\bunsigned\\b", "\\bvirtual\\b", "\\bvoid\\b",
+                            "\\bvolatile\\b"]
+
+        self.highlightingRules = [(QRegExp(pattern), keyword_format)
+                                  for pattern in keyword_patterns]
+
+        class_format = QTextCharFormat()
+        class_format.setFontWeight(QFont.Bold)
+        class_format.setForeground(Qt.darkMagenta)
+        self.highlightingRules.append((QRegExp("\\bQ[A-Za-z]+\\b"),
+                                       class_format))
+
+        single_line_comment_format = QTextCharFormat()
+        single_line_comment_format.setForeground(Qt.red)
+        self.highlightingRules.append((QRegExp("//[^\n]*"),
+                                       single_line_comment_format))
+
+        self.multiLineCommentFormat = QTextCharFormat()
+        self.multiLineCommentFormat.setForeground(Qt.red)
+
+        quotation_format = QTextCharFormat()
+        quotation_format.setForeground(Qt.darkGreen)
+        self.highlightingRules.append((QRegExp("\".*\""), quotation_format))
+
+        separators_format = QTextCharFormat()
+        separators_format.setForeground(Qt.blue)
+        self.highlightingRules.append((QRegExp("\*.*\*"), separators_format))
+
+        function_format = QTextCharFormat()
+        function_format.setFontItalic(True)
+        function_format.setForeground(Qt.blue)
+        self.highlightingRules.append((QRegExp("\\b[A-Za-z0-9_]+(?=\\()"),
+                                       function_format))
+
+        self.commentStartExpression = QRegExp("/\\*")
+        self.commentEndExpression = QRegExp("\\*/")
+
+    def highlightBlock(self, text):
+        for pattern, format_text in self.highlightingRules:
+            expression = QRegExp(pattern)
+            index = expression.indexIn(text)
+            while index >= 0:
+                length = expression.matchedLength()
+                self.setFormat(index, length, format_text)
+                index = expression.indexIn(text, index + length)
+
+        self.setCurrentBlockState(0)
+
+        start_index = 0
+        if self.previousBlockState() != 1:
+            start_index = self.commentStartExpression.indexIn(text)
+
+        while start_index >= 0:
+            end_index = self.commentEndExpression.indexIn(text, start_index)
+
+            if end_index == -1:
+                self.setCurrentBlockState(1)
+                comment_length = len(text) - start_index
+            else:
+                comment_length = end_index - start_index + self.commentEndExpression.matchedLength()
+
+            self.setFormat(start_index, comment_length,
+                           self.multiLineCommentFormat)
+            start_index = self.commentStartExpression.indexIn(text,
+                                                              start_index + comment_length)

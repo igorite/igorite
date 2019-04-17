@@ -44,7 +44,6 @@ class Step(QFrame):
         self.main_keyword.setText(main_keyword)
         self.layout.addWidget(self.main_keyword)
 
-
         self.tooltip = QFrame(self)
         self.tooltip.setGeometry(0, 0, 30, 30)
         self.tooltip.show()
@@ -53,4 +52,3 @@ class Step(QFrame):
     def set_state(self):
         if self.main_keyword.text() not in self.parent.keywords_list:
             self.main_keyword.setProperty('WRONG', True)
-

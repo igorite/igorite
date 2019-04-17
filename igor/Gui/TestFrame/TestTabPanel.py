@@ -6,5 +6,4 @@ class TestTabPanel(QTabWidget):
 
     def __init__(self, test_data):
         QTabWidget.__init__(self)
-        self.addTab(TextEdit(test_data,self), 'Steps')
-
+        self.addTab(TextEdit(test_data, self), 'Steps')

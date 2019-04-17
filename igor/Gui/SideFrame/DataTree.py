@@ -6,12 +6,14 @@ from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
 from robot.api import TestData
 from robot.parsing.model import TestCaseFile, TestCase
+from robot.libraries import BuiltIn
 
 
 class TestTree(QTreeWidget):
 
-    def __init__(self, parent, show_test=False, show_variable=False, show_keyword=False):
+    def __init__(self, parent, root_name, show_test=False, show_variable=False, show_keyword=False):
         self.side_frame = parent
+        self.root_name = root_name
         self.main_frame = parent.main_frame
         self.show_test = show_test
         self.show_variable = show_variable
@@ -24,12 +26,14 @@ class TestTree(QTreeWidget):
         self.id = 0
         self.root = None
         self.source = None
+        self.libraries = None
         self.suite_icon = QIcon(path.join(self.path, '..', 'images', 'folder_icon.png'))
         self.test_icon = QIcon(path.join(self.path, '..', 'images', 'test_icon.png'))
         self.keyword_icon = QIcon(path.join(self.path, '..', 'images', 'keyword_icon.png'))
         self.variable_icon = QIcon(path.join(self.path, '..', 'images', 'variable_icon.png'))
 
         self.open_directory()
+        self.add_libraries()
 
         self.itemDoubleClicked.connect(self.item_clicked_open)
         font = QFont()
@@ -39,7 +43,7 @@ class TestTree(QTreeWidget):
     def open_directory(self, filepath='C:\\Users\\3l1n\\Desktop\\RobotDemo-master'):
         self.source = TestData(source=filepath)
         self.root = QTreeWidgetItem()
-        self.root.setText(0, self.source.name)
+        self.root.setText(0, self.root_name)
         self.root.setFlags(self.root.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsTristate)
 
         self.get_child_data(self.source,
@@ -97,6 +101,13 @@ class TestTree(QTreeWidget):
         child.setText(0, keyword.name)
         root.addChild(child)
 
+    def add_library_keyword(self, keyword, root):
+        self.test_dict[keyword] = keyword
+        child = KeywordTreeWidget()
+        child.setIcon(0, self.keyword_icon)
+        child.setText(0, keyword)
+        root.addChild(child)
+
     def add_variable(self, variable, root):
         self.test_dict[variable.name] = variable
         child = TestTreeWidget()
@@ -105,16 +116,29 @@ class TestTree(QTreeWidget):
         root.addChild(child)
 
     def item_clicked_open(self, item):
-        if isinstance(self.test_dict[item.text(0)],TestCase):
+        if isinstance(self.test_dict[item.text(0)], TestCase):
             self.main_frame.main_panel.open_tab(self.test_dict[item.text(0)])
         else:
             pass
+
+    def add_libraries(self):
+        self.libraries = QTreeWidgetItem()
+        self.libraries.setText(0, 'Libraries')
+        self.addTopLevelItem(self.libraries)
+
+        for func in self.import_library(BuiltIn.BuiltIn):
+            self.add_library_keyword(func, self.libraries)
+
+    @staticmethod
+    def import_library(library):
+        return [func for func in dir(library) if not func.startswith('_')]
 
 
 class TestTreeWidget(QTreeWidgetItem):
 
     def __init__(self):
         QTreeWidgetItem.__init__(self)
+
 
 class KeywordTreeWidget(QTreeWidgetItem):
 

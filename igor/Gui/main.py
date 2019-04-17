@@ -9,6 +9,7 @@ from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
+from robot.libraries.BuiltIn import BuiltIn
 
 
 class MainWindow(QMainWindow):

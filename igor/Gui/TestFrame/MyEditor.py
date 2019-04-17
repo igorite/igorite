@@ -38,6 +38,7 @@ class TextEdit(QTextEdit):
         self._completer_popup.setStyleSheet(style_sheet)
         self._completer_popup.setFont(self.font)
         self.completer.setModel(self.items)
+        self.completion_prefix = ''
 
     def get_keywords(self):
         for keyword in self.test_data.parent.parent.keyword_table:
@@ -75,14 +76,21 @@ class TextEdit(QTextEdit):
     def text_under_cursor(self):
         tc = self.textCursor()
         tc.select(QTextCursor.WordUnderCursor)
+        current_length = len(self.completion_prefix)
+        if (self._completer.currentCompletion()[0:current_length].lower() == self.completion_prefix.lower()
+                and self.completion_prefix != ''):
 
+            if tc.selectedText() == '':
+                print('hey')
+                return self.completion_prefix + ' '
+            else:
+                return self.completion_prefix + tc.selectedText()[:-1]
         return tc.selectedText()
 
     def focusInEvent(self, e):
 
         if self._completer is not None:
             self._completer.setWidget(self)
-
         super(TextEdit, self).focusInEvent(e)
 
     def keyPressEvent(self, e):
@@ -107,18 +115,18 @@ class TextEdit(QTextEdit):
 
         eow = "~!@#$%^&*()_+{}|:\"<>?,./;'[]\\-="
         has_modifier = (e.modifiers() != Qt.NoModifier) and not ctrl_or_shift
-        completion_prefix = self.text_under_cursor()
+        self.completion_prefix = self.text_under_cursor()
 
         if (not is_shortcut
                 and (has_modifier
                      or len(e.text()) == 0
-                     or len(completion_prefix) < 2
+                     or len(self.completion_prefix) < 2
                      or e.text()[-1] in eow)):
             self._completer.popup().hide()
             return
 
-        if completion_prefix != self._completer.completionPrefix():
-            self._completer.setCompletionPrefix(completion_prefix)
+        if self.completion_prefix != self._completer.completionPrefix():
+            self._completer.setCompletionPrefix(self.completion_prefix)
             self._completer_popup = self._completer.popup()
             self._completer.popup().setCurrentIndex(
                 self._completer.completionModel().index(0, 0))
@@ -158,7 +166,7 @@ class RobotFrameworkHighlighter(QSyntaxHighlighter):
 
         single_line_comment_format = QTextCharFormat()
         single_line_comment_format.setForeground(Qt.red)
-        self.highlightingRules.append((QRegExp("//[^\n]*"),
+        self.highlightingRules.append((QRegExp("user types .*"),
                                        single_line_comment_format))
 
         self.multiLineCommentFormat = QTextCharFormat()
@@ -169,14 +177,19 @@ class RobotFrameworkHighlighter(QSyntaxHighlighter):
         self.highlightingRules.append((QRegExp("\".*\""), quotation_format))
 
         separators_format = QTextCharFormat()
-        separators_format.setForeground(Qt.blue)
+        separators_format.setForeground(Qt.darkMagenta)
         self.highlightingRules.append((QRegExp("\*.*\*"), separators_format))
 
         function_format = QTextCharFormat()
         function_format.setFontItalic(True)
-        function_format.setForeground(Qt.blue)
+        function_format.setForeground(Qt.darkYellow)
         self.highlightingRules.append((QRegExp("\\b[A-Za-z0-9_]+(?=\\()"),
                                        function_format))
+
+        documentation_format = QTextCharFormat()
+        documentation_format.setForeground(Qt.green)
+        self.highlightingRules.append((QRegExp("[.][.][.]"), documentation_format))
+        self.highlightingRules.append((QRegExp("[.][.][.] .*"), documentation_format))
 
         self.commentStartExpression = QRegExp("/\\*")
         self.commentEndExpression = QRegExp("\\*/")

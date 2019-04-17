@@ -9,8 +9,8 @@ class SideFrame(QFrame):
         QFrame.__init__(self)
         self.main_frame = parent
 
-        self.test_tree = TestTree(self, show_test=True, show_variable=True, show_keyword=True)
-        self.keyword_tree = TestTree(self,show_keyword=True, show_variable=True)
+        self.test_tree = TestTree(self, 'Project', show_test=True, show_variable=True, show_keyword=True)
+        self.keyword_tree = TestTree(self, 'Objects', show_keyword=True, show_variable=True)
         self.tree_container = SideFrameContainer(self.test_tree, 'Test cases')
         self.keyword_tree_container = SideFrameContainer(self.keyword_tree, 'Keywords')
         self.layout = QVBoxLayout()

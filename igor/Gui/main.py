@@ -1,3 +1,18 @@
+# Copyright 2019 SocIsomer
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
 from os import path
 from PyQt5.QtCore import Qt, QSize
@@ -9,7 +24,6 @@ from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
-from robot.libraries.BuiltIn import BuiltIn
 
 
 class MainWindow(QMainWindow):
@@ -65,7 +79,8 @@ class MainWindow(QMainWindow):
 
     def load_project(self):
         self.load = LoadProjectWindow()
-
+        
+    @staticmethod
     def closeEvent(self, event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 

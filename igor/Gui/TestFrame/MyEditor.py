@@ -60,9 +60,6 @@ class TextEdit(QTextEdit):
         c.setCaseSensitivity(Qt.CaseInsensitive)
         c.activated.connect(self.insert_completion)
 
-    def completer(self):
-        return self._completer
-
     def insert_completion(self, completion):
         if self._completer.widget() is not self:
             return

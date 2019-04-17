@@ -1,3 +1,17 @@
+# Copyright 2019 SocIsomer
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 from os import path
 
@@ -5,7 +19,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
 from robot.api import TestData
-from robot.parsing.model import TestCaseFile, TestCase
+from robot.parsing.model import TestCaseFile, TestCase, TestDataDirectory
 from robot.libraries import BuiltIn
 
 
@@ -27,10 +41,13 @@ class TestTree(QTreeWidget):
         self.root = None
         self.source = None
         self.libraries = None
-        self.suite_icon = QIcon(path.join(self.path, '..', 'images', 'folder_icon.png'))
+        self.project_icon = QIcon(path.join(self.path, '..', 'images', 'IgorIcon.png'))
+        self.folder_icon = QIcon(path.join(self.path, '..', 'images', 'folder_icon.png'))
+        self.test_case_file_icon = QIcon(path.join(self.path, '..', 'images', 'test_case_file_icon.png'))
         self.test_icon = QIcon(path.join(self.path, '..', 'images', 'test_icon.png'))
         self.keyword_icon = QIcon(path.join(self.path, '..', 'images', 'keyword_icon.png'))
         self.variable_icon = QIcon(path.join(self.path, '..', 'images', 'variable_icon.png'))
+        self.libraries_icon = QIcon(path.join(self.path, '..', 'images', 'libraries_icon.png'))
 
         self.open_directory()
         self.add_libraries()
@@ -44,7 +61,7 @@ class TestTree(QTreeWidget):
         self.source = TestData(source=filepath)
         self.root = QTreeWidgetItem()
         self.root.setText(0, self.root_name)
-        self.root.setFlags(self.root.flags() | Qt.ItemIsUserCheckable | Qt.ItemIsTristate)
+        self.root.setIcon(0, self.project_icon)
 
         self.get_child_data(self.source,
                             self.root,
@@ -65,10 +82,10 @@ class TestTree(QTreeWidget):
         for children in suite.children:
             self.test_dict[children.name] = children
             child = QTreeWidgetItem()
+            if isinstance(children, TestDataDirectory):
+                child.setIcon(0, self.folder_icon)
             if isinstance(children, TestCaseFile):
-                child.setIcon(0, self.suite_icon)
-            child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
-            child.setCheckState(0, Qt.Unchecked)
+                child.setIcon(0, self.test_case_file_icon)
             child.setText(0, children.name)
             if children.children or children.testcase_table:
                 self.get_child_data(children, child, tests_data, keywords_data, variable_data)
@@ -124,6 +141,7 @@ class TestTree(QTreeWidget):
     def add_libraries(self):
         self.libraries = QTreeWidgetItem()
         self.libraries.setText(0, 'Libraries')
+        self.libraries.setIcon(0, self.libraries_icon)
         self.addTopLevelItem(self.libraries)
 
         for func in self.import_library(BuiltIn.BuiltIn):

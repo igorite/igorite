@@ -19,8 +19,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
 from robot.api import TestData
+from robot.libraries import BuiltIn, OperatingSystem, Process, String, Remote, Telnet, Collections, Screenshot, XML
 from robot.parsing.model import TestCaseFile, TestCase, TestDataDirectory
-from robot.libraries import BuiltIn
 
 
 class TestTree(QTreeWidget):
@@ -48,6 +48,7 @@ class TestTree(QTreeWidget):
         self.keyword_icon = QIcon(path.join(self.path, '..', 'images', 'keyword_icon.png'))
         self.variable_icon = QIcon(path.join(self.path, '..', 'images', 'variable_icon.png'))
         self.libraries_icon = QIcon(path.join(self.path, '..', 'images', 'libraries_icon.png'))
+        self.python_icon = QIcon(path.join(self.path, '..', 'images', 'python_icon.png'))
 
         self.open_directory()
         self.add_libraries()
@@ -57,7 +58,8 @@ class TestTree(QTreeWidget):
         font.setPointSize(13)
         self.setFont(font)
 
-    def open_directory(self, filepath='C:\\Users\\3l1n\\Desktop\\RobotDemo-master'):
+    def open_directory(self,
+                       filepath='C:\\Users\\3l1n\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\igorite\demo testcases'):
         self.source = TestData(source=filepath)
         self.root = QTreeWidgetItem()
         self.root.setText(0, self.root_name)
@@ -120,9 +122,11 @@ class TestTree(QTreeWidget):
 
     def add_library_keyword(self, keyword, root):
         self.test_dict[keyword] = keyword
+        text = keyword.replace('_', ' ')
+        text = text.title()
         child = KeywordTreeWidget()
         child.setIcon(0, self.keyword_icon)
-        child.setText(0, keyword)
+        child.setText(0, text)
         root.addChild(child)
 
     def add_variable(self, variable, root):
@@ -139,13 +143,30 @@ class TestTree(QTreeWidget):
             pass
 
     def add_libraries(self):
+
+        # TODO: add DATE and Time and Messages
+        default_libraries = [[BuiltIn.BuiltIn, 'Built In'],
+                             [OperatingSystem.OperatingSystem, 'Operating System'],
+                             [Process.Process, 'Process'],
+                             [String.String, 'String'],
+                             [Remote.Remote, 'Remote'],
+                             [Telnet.Telnet, 'Telnet'],
+                             [Collections.Collections, 'Collections'],
+                             [Screenshot.Screenshot, 'ScreenShot'],
+                             [XML.XML, 'XML']]
+
         self.libraries = QTreeWidgetItem()
         self.libraries.setText(0, 'Libraries')
         self.libraries.setIcon(0, self.libraries_icon)
         self.addTopLevelItem(self.libraries)
 
-        for func in self.import_library(BuiltIn.BuiltIn):
-            self.add_library_keyword(func, self.libraries)
+        for library in default_libraries:
+            library_root = QTreeWidgetItem()
+            library_root.setText(0, library[1])
+            library_root.setIcon(0, self.python_icon)
+            self.libraries.addChild(library_root)
+            for func in self.import_library(library[0]):
+                self.add_library_keyword(func, library_root)
 
     @staticmethod
     def import_library(library):

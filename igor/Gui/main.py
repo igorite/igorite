@@ -24,6 +24,7 @@ from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
+from igor.Core.Git import GitManager
 
 
 class MainWindow(QMainWindow):
@@ -47,6 +48,7 @@ class MainWindow(QMainWindow):
         self.run_options = None
         self.menu = None
         self.project_window = None
+        self.git_manager = GitManager()
         self.add_menu()
         self.showMaximized()
 
@@ -73,6 +75,15 @@ class MainWindow(QMainWindow):
         load_project_action.setShortcut('Ctrl+O')
         load_project_action.triggered.connect(self.load_project)
         file_menu.addAction(load_project_action)
+
+        # Git Menu
+
+        git_menu = self.menu.addMenu('Git')
+        git_action = QAction('New Project', file_menu)
+        git_action.setShortcut('Ctrl+N')
+        git_action.triggered.connect(self.git_manager.get_git_log)
+        git_menu.addAction(git_action)
+
 
     def create_project(self):
         self.project_window = CreateProjectWindow()

@@ -24,7 +24,7 @@ from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
-from igor.Core.Git import GitManager
+from igor.Components.Git.GitShowLog import GitLogWindow
 
 
 class MainWindow(QMainWindow):
@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.run_options = None
         self.menu = None
         self.project_window = None
-        self.git_manager = GitManager()
+        self.git_manager = None
         self.add_menu()
         self.showMaximized()
 
@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
         git_menu = self.menu.addMenu('Git')
         git_action = QAction('New Project', file_menu)
         git_action.setShortcut('Ctrl+N')
-        git_action.triggered.connect(self.git_manager.get_git_log)
+        git_action.triggered.connect(self.git_show_log)
         git_menu.addAction(git_action)
 
     def create_project(self):
@@ -88,9 +88,12 @@ class MainWindow(QMainWindow):
 
     def load_project(self):
         self.load = LoadProjectWindow()
+
+    def git_show_log(self):
+        self.git_manager = GitLogWindow()
         
     @staticmethod
-    def closeEvent(self, event):
+    def closeEvent(event):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 
         Reimplemented the closeEvent() event handler to include a 'Question'

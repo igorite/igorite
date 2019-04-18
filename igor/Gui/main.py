@@ -77,13 +77,11 @@ class MainWindow(QMainWindow):
         file_menu.addAction(load_project_action)
 
         # Git Menu
-
         git_menu = self.menu.addMenu('Git')
         git_action = QAction('New Project', file_menu)
         git_action.setShortcut('Ctrl+N')
         git_action.triggered.connect(self.git_manager.get_git_log)
         git_menu.addAction(git_action)
-
 
     def create_project(self):
         self.project_window = CreateProjectWindow()

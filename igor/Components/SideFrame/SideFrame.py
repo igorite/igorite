@@ -15,7 +15,7 @@
 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
-from igor.Gui.SideFrame.DataTree import TestTree
+from igor.Components.SideFrame.DataTree import TestTree
 
 
 class SideFrame(QFrame):

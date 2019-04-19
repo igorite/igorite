@@ -11,9 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-from PyQt5.QtWidgets import QWidget,QDesktopWidget, QApplication
+from os import path
+import os
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QWidget, QApplication
 from igor.Gui.StyleSheet import style_sheet
 
 
@@ -21,6 +22,9 @@ class PopUpWindow(QWidget):
 
     def __init__(self, title):
         QWidget.__init__(self)
+        self.path = os.path.abspath(path.dirname(__file__))
+        self.project_icon = QIcon(path.join(self.path, '..', 'images', 'IgorIcon.png'))
+        self.setWindowIcon(self.project_icon)
         self.setWindowTitle(title)
         self.setGeometry(300, 300, 300, 300)
         self.setStyleSheet(style_sheet)

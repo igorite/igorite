@@ -1,4 +1,4 @@
-from igor.Gui.PopUpWindows.PopUp import PopUpWindow
+from igor.Components.Core.PopUp import PopUpWindow
 from PyQt5.QtWidgets import QFrame, QLineEdit, QVBoxLayout
 
 

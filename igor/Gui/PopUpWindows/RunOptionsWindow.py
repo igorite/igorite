@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QLabel, QFrame, QHBoxLayout
-from igor.Gui.PopUpWindows.PopUp import PopUpWindow
+from igor.Components.Core.PopUp import PopUpWindow
 from igor.Gui.StyleSheet import style_sheet
 
 

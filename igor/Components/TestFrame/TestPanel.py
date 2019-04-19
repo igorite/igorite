@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QFrame, QHBoxLayout
-from igor.Gui.TestFrame.GridEditor import StepsContainer
+from igor.Components.TestFrame.GridEditor import StepsContainer
 
 
 class TestPanel(QFrame):

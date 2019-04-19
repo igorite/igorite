@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QTabWidget
-from igor.Gui.TestFrame.MyEditor import TextEdit
+from igor.Components.TestFrame.MyEditor import TextEdit
 
 
 class TestTabPanel(QTabWidget):

@@ -16,14 +16,14 @@
 import os
 from os import path
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtGui import QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton
 from igor.Components.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows import *
-from igor.Gui.SideFrame.SideFrame import SideFrame
+from igor.Components.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
-from igor.Gui.TestFrame.TestTabPanel import TestTabPanel
+from igor.Components.TestFrame.TestTabPanel import TestTabPanel
 from igor.Components.Git.GitShowLog import GitLogWindow
 
 
@@ -35,14 +35,15 @@ class MainWindow(QMainWindow):
         self.setGeometry(800, 300, 300, 300)
         self.setWindowTitle('Igor')
 
-        self.app_icon = QIcon(os.path.join(self.path, 'images', 'IgorIcon.png'))
+        self.app_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'IgorIcon.png'))
+        self.folder_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'folder_icon.png'))
 
         self.setWindowIcon(self.app_icon)
 
         self.setStyleSheet(style_sheet)
         self.main_frame = MainFrame()
         self.setCentralWidget(self.main_frame)
-        self.toolbar = self.addToolBar(Toolbar(self))
+        # self.toolbar = self.addToolBar(Toolbar(self))
         self.robot_run = None
         self.load = None
         self.run_options = None
@@ -50,6 +51,9 @@ class MainWindow(QMainWindow):
         self.project_window = None
         self.git_manager = None
         self.add_menu()
+        self.font = QFont()
+        self.set_app_font()
+
         self.showMaximized()
 
     def run_tests(self):
@@ -72,6 +76,7 @@ class MainWindow(QMainWindow):
         file_menu.addAction(create_project_action)
 
         load_project_action = QAction('Load Project', file_menu)
+        load_project_action.setIcon(self.folder_icon)
         load_project_action.setShortcut('Ctrl+O')
         load_project_action.triggered.connect(self.load_project)
         file_menu.addAction(load_project_action)
@@ -83,6 +88,14 @@ class MainWindow(QMainWindow):
         git_action.triggered.connect(self.git_show_log)
         git_menu.addAction(git_action)
 
+        # Run Menu
+
+        run_menu = self.menu.addMenu('Run')
+        run_action = QAction('Run tests', run_menu)
+        run_action.setShortcut('Ctrl+R')
+        run_action.triggered.connect(self.run_tests)
+        run_menu.addAction(run_action)
+
     def create_project(self):
         self.project_window = CreateProjectWindow()
 
@@ -92,12 +105,23 @@ class MainWindow(QMainWindow):
     def git_show_log(self):
         self.git_manager = GitLogWindow()
 
+    def set_app_font(self):
+        font_id = QFontDatabase.addApplicationFont(path.join(path.dirname(self.path),
+                                                             'components',
+                                                             'font',
+                                                             'FiraCode-Medium.ttf'))
+        family = QFontDatabase.applicationFontFamilies(font_id)[0]
+        self.font.setPointSize(12)
+        self.font.setFamily(family)
+        self.setFont(self.font)
+
     @staticmethod
-    def closeEvent(event):
+    def closeEvent(event, **kwargs):
         """Generate 'question' dialog on clicking 'X' button in title bar.
 
         Reimplemented the closeEvent() event handler to include a 'Question'
         dialog with options on how to proceed - Save, Close, Cancel buttons
+        :param event:
         """
         close_window = QMessageBox()
         reply = close_window.question(close_window,
@@ -137,7 +161,7 @@ class MainFrame(QFrame):
         self.main_panel = MainPanel()
         splitter.addWidget(self.side_frame)
         splitter.addWidget(self.main_panel)
-        splitter.setSizes([100, 600])
+        splitter.setSizes([150, 600])
 
         layout = QHBoxLayout(self)
         layout.setStretch(0, 0)

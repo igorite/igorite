@@ -16,9 +16,10 @@
 # Imports
 # ----------------------------------
 from igor.Components.Project.CreateProjectWindow import CreateProjectWindow
+from igor.Components.Project.WelcomeTab import WelcomeTab
 
 
 # ----------------------------------
 # Define import classes
 # ----------------------------------
-__all__ = ['CreateProjectWindow']
+__all__ = ['CreateProjectWindow', 'WelcomeTab']

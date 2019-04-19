@@ -18,9 +18,9 @@ from os import path
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton, QFileDialog
 from igor.Components.Core.RobotRun import RobotRun
-from igor.Gui.PopUpWindows import *
+from igor.Components.Project.CreateProjectWindow import CreateProjectWindow
 from igor.Components.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
 from igor.Components.TestFrame.TestTabPanel import TestTabPanel
@@ -29,11 +29,12 @@ from igor.Components.Git.GitShowLog import GitLogWindow
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, ):
+    def __init__(self, project_path=None):
         QMainWindow.__init__(self)
         self.path = os.path.abspath(path.dirname(__file__))
         self.setGeometry(800, 300, 300, 300)
-        self.setWindowTitle('Igor')
+        self.setWindowTitle('Igorite')
+        self.project_path = project_path
 
         self.app_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'IgorIcon.png'))
         self.folder_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'folder_icon.png'))
@@ -41,7 +42,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(self.app_icon)
 
         self.setStyleSheet(style_sheet)
-        self.main_frame = MainFrame()
+        self.main_frame = MainFrame(self)
         self.setCentralWidget(self.main_frame)
         # self.toolbar = self.addToolBar(Toolbar(self))
         self.robot_run = None
@@ -50,6 +51,7 @@ class MainWindow(QMainWindow):
         self.menu = None
         self.project_window = None
         self.git_manager = None
+        self.pop_up = None
         self.add_menu()
         self.font = QFont()
         self.set_app_font()
@@ -63,7 +65,7 @@ class MainWindow(QMainWindow):
         self.robot_run.start()
 
     def open_run_tests(self):
-        self.run_options = RunOptionsWindow()
+        pass
 
     def add_menu(self):
         self.menu = self.menuBar()
@@ -100,7 +102,13 @@ class MainWindow(QMainWindow):
         self.project_window = CreateProjectWindow()
 
     def load_project(self):
-        self.load = LoadProjectWindow()
+        self.pop_up = QFileDialog()
+        self.pop_up.setFileMode(QFileDialog.DirectoryOnly)
+        self.pop_up.fileSelected.connect(self.load_project_data)
+        self.pop_up.show()
+
+    def load_project_data(self,strg):
+        self.main_frame.side_frame.update_project_data(strg)
 
     def git_show_log(self):
         self.git_manager = GitLogWindow()
@@ -153,8 +161,9 @@ class Toolbar(QToolBar):
 
 class MainFrame(QFrame):
 
-    def __init__(self):
+    def __init__(self, parent):
         QFrame.__init__(self)
+        self.window = parent
 
         splitter = QSplitter(Qt.Horizontal)
         self.side_frame = SideFrame(self)

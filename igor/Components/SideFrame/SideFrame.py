@@ -1,4 +1,4 @@
-# Copyright 2019 SocIsomer
+# Copyright 2019 Igorite
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
-from igor.Components.SideFrame.DataTree import TestTree
+from igor.Components.SideFrame.DataTree import DataTree
 
 
 class SideFrame(QFrame):
@@ -23,9 +23,12 @@ class SideFrame(QFrame):
     def __init__(self, parent):
         QFrame.__init__(self)
         self.main_frame = parent
+        self.window = parent.window
 
-        self.test_tree = TestTree(self, 'Project', show_test=True, show_variable=True, show_keyword=True)
-        self.keyword_tree = TestTree(self, 'Objects', show_keyword=True, show_variable=True)
+        self.test_tree = DataTree(self, 'Project', show_test=True, show_variable=True, show_keyword=True)
+        if self.window.project_path:
+            self.test_tree.open_project(self.window.project_path)
+        self.keyword_tree = DataTree(self, 'Objects', show_keyword=True, show_variable=True)
         self.tree_container = SideFrameContainer(self.test_tree, 'Test cases')
         self.keyword_tree_container = SideFrameContainer(self.keyword_tree, 'Keywords')
         self.keyword_tree_container.hide_title()
@@ -42,6 +45,9 @@ class SideFrame(QFrame):
 
     def get_tree(self):
         return self.tree
+
+    def update_project_data(self, project_path):
+        self.test_tree.update_project_data(project_path)
 
 
 class SideFrameContainer(QFrame):

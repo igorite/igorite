@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# ----------------------------------
+# Imports
+# ----------------------------------
 import os
 from os import path
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem
@@ -23,24 +26,39 @@ from robot.libraries import BuiltIn, OperatingSystem, Process, String, Remote, T
 from robot.parsing.model import TestCaseFile, TestCase, TestDataDirectory
 
 
-class TestTree(QTreeWidget):
+class DataTree(QTreeWidget):
 
-    def __init__(self, parent, root_name, show_test=False, show_variable=False, show_keyword=False):
+    def __init__(self,
+                 parent,
+                 root_name,
+                 show_test=False,
+                 show_variable=False,
+                 show_keyword=False,
+                 show_libraries=False):
+
+        # ----------------------------------
+        # Initialize class and variables
+        # ----------------------------------
+
+        QTreeWidget.__init__(self)
         self.side_frame = parent
         self.root_name = root_name
         self.main_frame = parent.main_frame
         self.show_test = show_test
         self.show_variable = show_variable
         self.show_keyword = show_keyword
-
-        QTreeWidget.__init__(self)
-        self.setHeaderHidden(True)
+        self.show_libraries = show_libraries
         self.path = os.path.abspath(path.dirname(__file__))
         self.test_dict = {}
         self.id = 0
         self.root = None
         self.source = None
         self.libraries = None
+        self.font = QFont()
+        # ----------------------------------
+        # Get icon images
+        # ----------------------------------
+
         self.project_icon = QIcon(path.join(self.path, '..', 'images', 'IgorIcon.png'))
         self.folder_icon = QIcon(path.join(self.path, '..', 'images', 'folder_icon.png'))
         self.test_case_file_icon = QIcon(path.join(self.path, '..', 'images', 'test_case_file_icon.png'))
@@ -50,17 +68,31 @@ class TestTree(QTreeWidget):
         self.libraries_icon = QIcon(path.join(self.path, '..', 'images', 'libraries_icon.png'))
         self.python_icon = QIcon(path.join(self.path, '..', 'images', 'python_icon.png'))
 
-        self.open_directory()
-        self.add_libraries()
-
+        # ----------------------------------
+        # Configure Tree
+        # ----------------------------------
+        self.setHeaderHidden(True)
         self.itemDoubleClicked.connect(self.item_clicked_open)
-        font = QFont()
-        font.setPointSize(13)
-        self.setFont(font)
 
-    def open_directory(self,
-                       filepath='C:\\Users\\3l1n\AppData\Local\Programs\Python\Python37-32\Lib\site-packages\igorite\demo testcases'):
-        self.source = TestData(source=filepath)
+        # ----------------------------------
+        # Configure Font
+        # ----------------------------------
+        self.font.setPointSize(13)
+        self.setFont(self.font)
+
+    def open_project(self, project_path):
+        self.open_directory(project_path)
+        if self.show_libraries:
+            self.add_libraries()
+
+    def update_project_data(self, project_path):
+        self.clear()
+        self.open_directory(project_path)
+        if self.show_libraries:
+            self.add_libraries()
+
+    def open_directory(self, file_path):
+        self.source = TestData(source=file_path)
         self.root = QTreeWidgetItem()
         self.root.setText(0, self.root_name)
         self.root.setIcon(0, self.project_icon)

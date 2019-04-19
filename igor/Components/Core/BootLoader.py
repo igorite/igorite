@@ -49,7 +49,7 @@ class BootLoader:
             self.configuration = json.load(json_file)
 
     def load_main_window(self):
-        self.app = MainWindow()
+        self.app = MainWindow(self.configuration['project_path'])
 
     def start_application(self):
         self.window = QApplication([])

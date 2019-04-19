@@ -15,16 +15,18 @@
 
 import os
 from os import path
-from PyQt5.QtCore import Qt, QSize
+
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont, QFontDatabase
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton, QFileDialog
+    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QFileDialog
 from igor.Components.Core.RobotRun import RobotRun
+from igor.Components.Project import *
+from igor.Components.Git.GitShowLog import GitLogWindow
 from igor.Components.Project.CreateProjectWindow import CreateProjectWindow
 from igor.Components.SideFrame.SideFrame import SideFrame
-from igor.Gui.StyleSheet import style_sheet
 from igor.Components.TestFrame.TestTabPanel import TestTabPanel
-from igor.Components.Git.GitShowLog import GitLogWindow
+from igor.Gui.StyleSheet import style_sheet
 
 
 class MainWindow(QMainWindow):
@@ -38,6 +40,7 @@ class MainWindow(QMainWindow):
 
         self.app_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'IgorIcon.png'))
         self.folder_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'folder_icon.png'))
+        self.play_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'play.png'))
 
         self.setWindowIcon(self.app_icon)
 
@@ -94,6 +97,7 @@ class MainWindow(QMainWindow):
 
         run_menu = self.menu.addMenu('Run')
         run_action = QAction('Run tests', run_menu)
+        run_action.setIcon(self.play_icon)
         run_action.setShortcut('Ctrl+R')
         run_action.triggered.connect(self.run_tests)
         run_menu.addAction(run_action)
@@ -107,8 +111,8 @@ class MainWindow(QMainWindow):
         self.pop_up.fileSelected.connect(self.load_project_data)
         self.pop_up.show()
 
-    def load_project_data(self,strg):
-        self.main_frame.side_frame.update_project_data(strg)
+    def load_project_data(self, directory_path):
+        self.main_frame.side_frame.update_project_data(directory_path)
 
     def git_show_log(self):
         self.git_manager = GitLogWindow()
@@ -184,7 +188,7 @@ class MainPanel(QTabWidget):
     def __init__(self):
         QTabWidget.__init__(self)
         self.path = os.path.abspath(path.dirname(__file__))
-        self.test_icon = QIcon(path.join(self.path, 'images', 'test_icon.png'))
+        self.test_icon = QIcon(path.join(self.path, '..', 'Components', 'images', 'test_icon.png'))
         self.setMovable(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.runner = None
@@ -228,31 +232,3 @@ class Runner(QFrame):
 
     def add_text(self, text):
         self.stream.appendPlainText(text)
-
-
-class WelcomeTab(QFrame):
-
-    def __init__(self):
-        QFrame.__init__(self)
-        self.path = os.path.abspath(path.dirname(__file__))
-        self.layout = QHBoxLayout()
-        self.setLayout(self.layout)
-        self.font = QFont()
-        self.font.setPointSize(16)
-
-        # Create Open Button
-        self.open_button = QToolButton()
-        self.open_button.setFont(self.font)
-        self.open_button.setText('Open Project')
-        self.open_button.setIcon(QIcon(path.join(self.path, 'images', 'new_icon.png')))
-        self.open_button.setIconSize(QSize(200, 200))
-        self.open_button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.layout.addWidget(self.open_button)
-
-        self.create_button = QToolButton()
-        self.create_button.setFont(self.font)
-        self.create_button.setText('Create Project')
-        self.create_button.setIcon(QIcon(path.join(self.path, 'images', 'variable_icon.png')))
-        self.create_button.setIconSize(QSize(200, 200))
-        self.create_button.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.layout.addWidget(self.create_button)

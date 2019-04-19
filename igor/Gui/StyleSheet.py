@@ -106,7 +106,7 @@ style_sheet = """
          border-bottom-color: #903030;
     }
     QTabBar::close-button{
-        image: url(Gui/images/close.png)
+        image: url(/../Components/images/close.png)
     }
 
     QTreeView{

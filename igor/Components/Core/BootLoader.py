@@ -20,6 +20,7 @@ import os
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import qFatal
 from igor.Gui.main import MainWindow
+from igor.Components.Core.Configuration import Config
 
 
 class BootLoader:
@@ -45,11 +46,14 @@ class BootLoader:
         pass
 
     def load_configuration(self):
+
         with open(os.path.join(os.path.dirname(__file__), 'default.json')) as json_file:
             self.configuration = json.load(json_file)
+        config = Config()
+        config.load_configuration()
 
     def load_main_window(self):
-        self.app = MainWindow(self.configuration['project_path'])
+        self.app = MainWindow(Config.CURRENT_PROJECT_PATH)
 
     def start_application(self):
         self.window = QApplication([])

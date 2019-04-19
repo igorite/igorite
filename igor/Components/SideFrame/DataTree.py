@@ -208,11 +208,10 @@ class DataTree(QTreeWidget):
 
     def contextMenuEvent(self, event):
         if event.reason() == event.Mouse:
-            pos = event.globalPos()
-            item = self.itemAt(event.pos())
 
+            item = self.itemAt(event.pos())
             if isinstance(item, TestWidget):
-                menu = FolderMenu(event)
+                FolderMenu(event)
 
 
 class FolderMenu(QMenu):

@@ -18,6 +18,7 @@
 from igor.Components.SideFrame.DataTree import DataTree
 from igor.Components.SideFrame.SideFrame import SideFrame
 
+
 # ----------------------------------
 # Define import classes
 # ----------------------------------

@@ -1,4 +1,4 @@
-# Copyright 2019 SocIsomer
+# Copyright 2019 Igorite
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ----------------------------------
+# Imports
+# ----------------------------------
 
 from igor.Components.Core.PopUp import PopUpWindow
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QTableWidget, QTableWidgetItem, QAbstractScrollArea
 import subprocess
+# ----------------------------------
 
 
 class GitLogWindow(PopUpWindow):

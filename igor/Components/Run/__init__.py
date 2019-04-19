@@ -20,4 +20,4 @@ from igor.Components.Run.RunOptionsWindow import RunOptionsWindow
 # ----------------------------------
 # Define import classes
 # ----------------------------------
-__all__ = [RunOptionsWindow]
+__all__ = ['RunOptionsWindow']

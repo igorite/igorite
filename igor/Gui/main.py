@@ -19,7 +19,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QToolButton
-from igor.Core.RobotRun import RobotRun
+from igor.Components.Core.RobotRun import RobotRun
 from igor.Gui.PopUpWindows import *
 from igor.Gui.SideFrame.SideFrame import SideFrame
 from igor.Gui.StyleSheet import style_sheet
@@ -78,8 +78,8 @@ class MainWindow(QMainWindow):
 
         # Git Menu
         git_menu = self.menu.addMenu('Git')
-        git_action = QAction('New Project', file_menu)
-        git_action.setShortcut('Ctrl+N')
+        git_action = QAction('Show log', file_menu)
+        git_action.setShortcut('Ctrl+S')
         git_action.triggered.connect(self.git_show_log)
         git_menu.addAction(git_action)
 

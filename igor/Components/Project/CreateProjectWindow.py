@@ -59,6 +59,7 @@ class CreateProjectFrame(QFrame):
         self.file_dialog = None
         self.current_path = self.get_home_directory()
         self.project_data = {}
+        self.self_path = os.path.abspath(os.path.dirname(__file__))
         # ----------------------------------
         # Create layout Manager
         # ----------------------------------
@@ -162,8 +163,19 @@ class CreateProjectFrame(QFrame):
         # dump the project data to a json file
         with open(json_path + '\\data.igt', 'w') as outfile:
             json.dump(self.project_data, outfile)
+
+        # ----------------------------------
+        # Update the configuration file
+        # ----------------------------------
+
+        self.update_configuration()
         # ----------------------------------
         # Close the project creator window
         # ----------------------------------
 
         self.window.close()
+
+    def update_configuration(self):
+        configuration_path = os.path.join(self.self_path, '..', 'Core', 'default.json')
+        with open(configuration_path, 'w') as outfile:
+            json.dump(self.project_data, outfile)

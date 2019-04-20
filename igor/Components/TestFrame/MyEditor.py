@@ -12,12 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from os import path
+
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import (QTextCursor, QStandardItemModel, QStandardItem, QIcon, QFont,
-                         QFontDatabase, QSyntaxHighlighter, QTextCharFormat)
-from PyQt5.QtWidgets import QCompleter, QTextEdit
-from os import path
+                         QSyntaxHighlighter, QTextCharFormat)
+from PyQt5.QtWidgets import QCompleter, QTextEdit, QFrame
 from igor.Gui.StyleSheet import style_sheet
+from igor.Components.Core.Configuration import MainFont
+
+
+class TextEditorFrame(QFrame):
+
+    def __init__(self):
+        QFrame.__init__(self)
 
 
 class TextEdit(QTextEdit):
@@ -30,14 +38,10 @@ class TextEdit(QTextEdit):
             file = f.read()
             self.append(str(file))
 
-        font_id = QFontDatabase.addApplicationFont(path.join(path.dirname(self.path),
-                                                             'font',
-                                                             'FiraCode-Medium.ttf'))
-        family = QFontDatabase.applicationFontFamilies(font_id)[0]
         self.highlighter = RobotFrameworkHighlighter(self)
-        self.font = QFont()
-        self.font.setPointSize(12)
-        self.font.setFamily(family)
+        self.font = MainFont.FONT
+        self.font.setPointSize(14)
+
         self.setFont(self.font)
         self._completer = None
         self.keyword_icon = QIcon(path.join(self.path, '..', 'images', 'keyword_icon.png'))

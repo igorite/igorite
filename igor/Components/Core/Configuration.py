@@ -18,10 +18,14 @@
 # ----------------------------------
 import os
 import json
+from PyQt5.QtGui import QFont, QFontDatabase
+from igor.Components.images.Images import Images
+
+
 # ----------------------------------
 
-class Config:
 
+class Config:
     # ----------------------------------
     # Define global variables
     # ----------------------------------
@@ -41,8 +45,10 @@ class Config:
         # ----------------------------------
         self.path = os.path.abspath(os.path.dirname(__file__))
 
-    def load_configuration(self, file_path=None):
+        Images()
+        MainFont()
 
+    def load_configuration(self, file_path=None):
         if file_path is None:
             Config.CONFIGURATION_JSON_PATH = os.path.join(self.path, 'default.json')
         with open(Config.CONFIGURATION_JSON_PATH, 'r') as config_file:
@@ -53,6 +59,21 @@ class Config:
         Config.FONT = Config.CONFIGURATION_JSON['font']
         Config.RECENT_PROJECTS = Config.CONFIGURATION_JSON['recent_projects']
 
-
     def save_configuration(self):
         pass
+
+
+class MainFont:
+
+    FONT = None
+
+    def __init__(self):
+        self.path = os.path.abspath(os.path.dirname(__file__))
+        font_path = os.path.join(self.path, 'font', 'FiraCode-Medium.ttf')
+        print(font_path)
+        self.font_id = QFontDatabase.addApplicationFont(font_path)
+        print(self.font_id)
+        family = QFontDatabase.applicationFontFamilies(self.font_id)[0]
+        MainFont.FONT = QFont()
+        MainFont.FONT.setPointSize(10)
+        MainFont.FONT.setFamily(family)

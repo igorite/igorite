@@ -20,7 +20,7 @@ import os
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import qFatal
 from igor.Gui.main import MainWindow
-from igor.Components.Core.Configuration import Config
+from igor.Components.Core.Configuration import Config, MainFont
 from igor.Components.images.Images import Images
 
 
@@ -58,7 +58,8 @@ class BootLoader:
 
     def start_application(self):
         self.window = QApplication([])
-        Images()
+        self.window.setFont(MainFont.FONT)
+
 
     @staticmethod
     def excepthook(type_, value, traceback_):

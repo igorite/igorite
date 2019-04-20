@@ -65,7 +65,6 @@ class MainWindow(QMainWindow):
 
         self.add_menu()
         self.font = QFont()
-        self.set_app_font()
 
         self.showMaximized()
 
@@ -126,15 +125,7 @@ class MainWindow(QMainWindow):
     def git_show_log(self):
         self.git_manager = GitLogWindow()
 
-    def set_app_font(self):
-        font_id = QFontDatabase.addApplicationFont(path.join(path.dirname(self.path),
-                                                             'components',
-                                                             'font',
-                                                             'FiraCode-Medium.ttf'))
-        family = QFontDatabase.applicationFontFamilies(font_id)[0]
-        self.font.setPointSize(12)
-        self.font.setFamily(family)
-        self.setFont(self.font)
+
 
     @staticmethod
     def closeEvent(event, **kwargs):

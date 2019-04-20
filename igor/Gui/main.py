@@ -20,7 +20,7 @@ import os
 from os import path
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QFontDatabase
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
     QTabWidget, QAction, QMessageBox, QFileDialog
 from igor.Components.Core.Configuration import Config

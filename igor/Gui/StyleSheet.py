@@ -300,5 +300,9 @@ QScrollBar::right-arrow:horizontal
 QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      background: none;
 }
+CustomCheckBox{
+    background-color: #500000;
+    border: 0px
+}
 
 """

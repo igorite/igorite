@@ -17,8 +17,9 @@
 # ----------------------------------
 
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton
-from igor.Components.SideFrame.DataTree import DataTree
+from PyQt5.QtWidgets import QFrame, QSplitter, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QTreeWidgetItemIterator
+from igor.Components.SideFrame.DataTree import DataTree, KeywordWidget, TestWidget, VariableWidget
+from igor.Components.images.Images import Images
 # ----------------------------------
 
 
@@ -59,7 +60,7 @@ class SideFrame(QFrame):
                                   show_keyword=True,
                                   show_libraries=True)
         self.tree_container = SideFrameContainer(self.test_tree, 'Test cases')
-        self.tree_container.hide_title()
+        # self.tree_container.hide_title()
         self.splitter.addWidget(self.tree_container)
         # ----------------------------------
 
@@ -91,7 +92,7 @@ class SideFrameContainer(QFrame):
 
         QFrame.__init__(self)
         self.widget = widget
-        self.title = SideFrameTitleFrame(title)
+        self.title = SideFrameTitleFrame(self.widget, title)
         # ----------------------------------
         # Create Layout Manager
         # ----------------------------------
@@ -117,12 +118,13 @@ class SideFrameContainer(QFrame):
 
 class SideFrameTitleFrame(QFrame):
 
-    def __init__(self, title):
+    def __init__(self, tree, title):
         # ----------------------------------
         # Initialize Frame and Variables
         # ----------------------------------
 
         QFrame.__init__(self)
+        self.tree = tree
         # ----------------------------------
         # Create Layout Manager
         # ----------------------------------
@@ -136,9 +138,80 @@ class SideFrameTitleFrame(QFrame):
         self.label = QLabel(title)
         self.layout.addWidget(self.label)
         # ----------------------------------
-        # Create Button
+        # Create Show buttons
         # ----------------------------------
 
-        self.close_button = QPushButton()
-        self.close_button.setMaximumSize(QSize(20, 20))
-        self.layout.addWidget(self.close_button)
+        self.keywords_button = CustomCheckBox(Images.KEYWORD_ICON, Images.KEYWORD_HIDE_ICON, self.show_keywords)
+        self.keywords_button.setMaximumSize(QSize(30, 30))
+        self.layout.addWidget(self.keywords_button)
+        # ----------------------------------
+
+        self.test_button = CustomCheckBox(Images.TEST_ICON, Images.TEST_HIDE_ICON, self.show_tests)
+        self.test_button.setMaximumSize(QSize(20, 20))
+        self.layout.addWidget(self.test_button)
+        # ----------------------------------
+
+        self.variable_button = CustomCheckBox(Images.VARIABLE_ICON, Images.VARIABLE_HIDE_ICON, self.show_variables)
+        self.variable_button.setMaximumSize(QSize(20, 20))
+        self.layout.addWidget(self.variable_button)
+        # ----------------------------------
+
+    def show_keywords(self):
+        if self.keywords_button.is_checked():
+            self.hide_items(KeywordWidget)
+        else:
+            self.show_items(KeywordWidget)
+
+    def show_variables(self):
+        if self.variable_button.is_checked():
+            self.hide_items(VariableWidget)
+        else:
+            self.show_items(VariableWidget)
+
+    def show_tests(self):
+        if self.test_button.is_checked():
+            self.hide_items(TestWidget)
+        else:
+            self.show_items(TestWidget)
+
+    def hide_items(self, item_type):
+        iterator = QTreeWidgetItemIterator(self.tree, QTreeWidgetItemIterator.NotHidden)
+
+        while iterator.value() is not None:
+            if isinstance(iterator.value(), item_type):
+                iterator.value().setHidden(True)
+
+            iterator += 1
+
+    def show_items(self, item_type):
+        iterator = QTreeWidgetItemIterator(self.tree, QTreeWidgetItemIterator.Hidden)
+
+        while iterator.value() is not None:
+            if isinstance(iterator.value(), item_type):
+                iterator.value().setHidden(False)
+
+            iterator += 1
+
+
+class CustomCheckBox(QPushButton):
+
+    def __init__(self, checked_icon, unchecked_icon, function):
+        QPushButton.__init__(self)
+        self.checked = False
+        self.checked_icon = checked_icon
+        self.unchecked_icon = unchecked_icon
+        self.function = function
+        self.setIcon(self.checked_icon)
+        self.clicked.connect(self.connect)
+
+    def connect(self):
+        if self.checked:
+            self.checked = False
+            self.setIcon(self.checked_icon)
+        else:
+            self.checked = True
+            self.setIcon(self.unchecked_icon)
+        self.function()
+
+    def is_checked(self):
+        return self.checked

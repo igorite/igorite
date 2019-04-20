@@ -20,7 +20,7 @@ import os
 from os import path
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem, QMenu, QAction
+from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem, QMenu, QAction, QTreeWidgetItemIterator
 from robot.api import TestData
 from robot.libraries import BuiltIn, OperatingSystem, Process, String, Remote, Telnet, Collections, Screenshot, XML
 from robot.parsing.model import TestCaseFile, TestCase, TestDataDirectory

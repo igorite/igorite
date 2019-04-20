@@ -70,9 +70,7 @@ class MainFont:
     def __init__(self):
         self.path = os.path.abspath(os.path.dirname(__file__))
         font_path = os.path.join(self.path, 'font', 'FiraCode-Regular.ttf')
-        print(font_path)
         self.font_id = QFontDatabase.addApplicationFont(font_path)
-        print(self.font_id)
         family = QFontDatabase.applicationFontFamilies(self.font_id)[0]
         MainFont.FONT = QFont()
         MainFont.FONT.setPointSize(10)

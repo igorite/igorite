@@ -27,6 +27,7 @@ from igor.Components.Project.CreateProjectWindow import CreateProjectWindow
 from igor.Components.SideFrame.SideFrame import SideFrame
 from igor.Components.TestFrame.TestTabPanel import TestTabPanel
 from igor.Gui.StyleSheet import style_sheet
+from igor.Components.Core.Configuration import Config
 
 
 class MainWindow(QMainWindow):
@@ -113,6 +114,7 @@ class MainWindow(QMainWindow):
 
     def load_project_data(self, directory_path):
         self.main_frame.side_frame.update_project_data(directory_path)
+        Config().load_configuration(directory_path)
 
     def git_show_log(self):
         self.git_manager = GitLogWindow()

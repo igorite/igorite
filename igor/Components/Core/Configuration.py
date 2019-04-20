@@ -11,11 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
+# ----------------------------------
+# Imports
+# ----------------------------------
 import os
 import json
-
+# ----------------------------------
 
 class Config:
+
+    # ----------------------------------
+    # Define global variables
+    # ----------------------------------
 
     CONFIGURATION_JSON = None
     CONFIGURATION_JSON_PATH = None
@@ -24,21 +33,26 @@ class Config:
     FONT = None
     RECENT_PROJECTS = []
 
+    # ----------------------------------
+
     def __init__(self):
+        # ----------------------------------
+        # get self file path
+        # ----------------------------------
         self.path = os.path.abspath(os.path.dirname(__file__))
-        pass
 
-    def load_configuration(self):
-        Config.CONFIGURATION_JSON_PATH = os.path.join(self.path, 'default.json')
+    def load_configuration(self, file_path=None):
 
+        if file_path is None:
+            Config.CONFIGURATION_JSON_PATH = os.path.join(self.path, 'default.json')
         with open(Config.CONFIGURATION_JSON_PATH, 'r') as config_file:
             Config.CONFIGURATION_JSON = json.loads(config_file.read())
 
         Config.CURRENT_PROJECT = Config.CONFIGURATION_JSON['project_name']
         Config.CURRENT_PROJECT_PATH = Config.CONFIGURATION_JSON['project_path']
+        Config.FONT = Config.CONFIGURATION_JSON['font']
+        Config.RECENT_PROJECTS = Config.CONFIGURATION_JSON['recent_projects']
 
-    def import_project(self):
-        pass
 
     def save_configuration(self):
         pass

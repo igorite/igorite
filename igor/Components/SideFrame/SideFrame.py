@@ -52,7 +52,12 @@ class SideFrame(QFrame):
         # Create Data Trees
         # ----------------------------------
 
-        self.test_tree = DataTree(self, 'Project', show_test=True, show_variable=True, show_keyword=True)
+        self.test_tree = DataTree(self,
+                                  'Project',
+                                  show_test=True,
+                                  show_variable=True,
+                                  show_keyword=True,
+                                  show_libraries=True)
         self.tree_container = SideFrameContainer(self.test_tree, 'Test cases')
         self.tree_container.hide_title()
         self.splitter.addWidget(self.tree_container)

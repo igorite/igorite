@@ -24,4 +24,4 @@ from igor.Components.Core.RobotRun import RobotRun
 # ----------------------------------
 # Define import classes
 # ----------------------------------
-__all__= ['BootLoader', 'Config', 'PopUpWindow', 'RobotRun']
+__all__ = ['BootLoader', 'Config', 'PopUpWindow', 'RobotRun']

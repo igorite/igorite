@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import qFatal
 from igor.Gui.main import MainWindow
 from igor.Components.Core.Configuration import Config
+from igor.Components.images.Images import Images
 
 
 class BootLoader:
@@ -57,6 +58,7 @@ class BootLoader:
 
     def start_application(self):
         self.window = QApplication([])
+        Images()
 
     @staticmethod
     def excepthook(type_, value, traceback_):

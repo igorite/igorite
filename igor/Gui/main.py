@@ -12,43 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ----------------------------------
+# Imports
+# ----------------------------------
 
 import os
 from os import path
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QFont, QFontDatabase
+from PyQt5.QtGui import QFont, QFontDatabase
 from PyQt5.QtWidgets import QMainWindow, QFrame, QSplitter, QHBoxLayout, \
-    QTabWidget, QAction, QToolBar, QPlainTextEdit, QMessageBox, QFileDialog
+    QTabWidget, QAction, QMessageBox, QFileDialog
+from igor.Components.Core.Configuration import Config
 from igor.Components.Core.RobotRun import RobotRun
-from igor.Components.Project import *
 from igor.Components.Git.GitShowLog import GitLogWindow
+from igor.Components.Project import *
 from igor.Components.Project.CreateProjectWindow import CreateProjectWindow
+from igor.Components.Run.Runner import Runner
 from igor.Components.SideFrame.SideFrame import SideFrame
 from igor.Components.TestFrame.TestTabPanel import TestTabPanel
+from igor.Components.images.Images import Images
 from igor.Gui.StyleSheet import style_sheet
-from igor.Components.Core.Configuration import Config
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self, project_path=None):
+        # ----------------------------------
+        # Initialize Main Window and Variables
+        # ----------------------------------
+
         QMainWindow.__init__(self)
         self.path = os.path.abspath(path.dirname(__file__))
-        self.setGeometry(800, 300, 300, 300)
-        self.setWindowTitle('Igorite')
         self.project_path = project_path
-
-        self.app_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'IgorIcon.png'))
-        self.folder_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'folder_icon.png'))
-        self.play_icon = QIcon(os.path.join(self.path, '..', 'components', 'images', 'play.png'))
-
-        self.setWindowIcon(self.app_icon)
-
-        self.setStyleSheet(style_sheet)
-        self.main_frame = MainFrame(self)
-        self.setCentralWidget(self.main_frame)
-        # self.toolbar = self.addToolBar(Toolbar(self))
         self.robot_run = None
         self.load = None
         self.run_options = None
@@ -56,6 +52,17 @@ class MainWindow(QMainWindow):
         self.project_window = None
         self.git_manager = None
         self.pop_up = None
+        # ----------------------------------
+        # Configure Window
+        # ----------------------------------
+
+        self.setWindowTitle('Igorite')
+        self.setWindowIcon(Images.APP_ICON)
+        self.setStyleSheet(style_sheet)
+        self.main_frame = MainFrame(self)
+        self.setCentralWidget(self.main_frame)
+        # self.toolbar = self.addToolBar(Toolbar(self))
+
         self.add_menu()
         self.font = QFont()
         self.set_app_font()
@@ -82,7 +89,7 @@ class MainWindow(QMainWindow):
         file_menu.addAction(create_project_action)
 
         load_project_action = QAction('Load Project', file_menu)
-        load_project_action.setIcon(self.folder_icon)
+        load_project_action.setIcon(Images.FOLDER_ICON)
         load_project_action.setShortcut('Ctrl+O')
         load_project_action.triggered.connect(self.load_project)
         file_menu.addAction(load_project_action)
@@ -98,7 +105,7 @@ class MainWindow(QMainWindow):
 
         run_menu = self.menu.addMenu('Run')
         run_action = QAction('Run tests', run_menu)
-        run_action.setIcon(self.play_icon)
+        run_action.setIcon(Images.PLAY_ICON)
         run_action.setShortcut('Ctrl+R')
         run_action.triggered.connect(self.run_tests)
         run_menu.addAction(run_action)
@@ -148,23 +155,6 @@ class MainWindow(QMainWindow):
             pass
 
 
-class Toolbar(QToolBar):
-
-    def __init__(self, parent):
-        self.parent = parent
-        QToolBar.__init__(self)
-        self.setMovable(False)
-        self.path = os.path.abspath(path.dirname(__file__))
-        # Create Play button
-        self.play = QAction(QIcon(path.join(self.path, 'images', 'Play.png')), 'Run', self)
-        self.play.triggered.connect(self.parent.run_tests)
-        self.addAction(self.play)
-        # Create Run button
-        self.run_button = QAction(QIcon(path.join(self.path, 'images', 'Play.png')), 'Run', self)
-        self.run_button.triggered.connect(self.parent.open_run_tests)
-        self.addAction(self.run_button)
-
-
 class MainFrame(QFrame):
 
     def __init__(self, parent):
@@ -190,7 +180,6 @@ class MainPanel(QTabWidget):
     def __init__(self):
         QTabWidget.__init__(self)
         self.path = os.path.abspath(path.dirname(__file__))
-        self.test_icon = QIcon(path.join(self.path, '..', 'Components', 'images', 'test_icon.png'))
         self.setMovable(True)
         self.tabCloseRequested.connect(self.close_tab)
         self.runner = None
@@ -203,34 +192,18 @@ class MainPanel(QTabWidget):
 
     def open_tab(self, robot_data):
 
-        self.addTab(TestTabPanel(robot_data), self.test_icon, robot_data.name)
+        self.addTab(TestTabPanel(robot_data), Images.TEST_CASE_FILE_ICON, robot_data.name)
         self.setCurrentIndex(self.count()-1)
         if self.count() >= 1:
             self.setTabsClosable(True)
 
     def open_runner(self):
         self.runner = Runner()
-        self.addTab(self.runner, self.test_icon, 'Run')
+        self.addTab(self.runner, Images.TEST_CASE_FILE_ICON, 'Run')
         self.setCurrentIndex(self.count() - 1)
         if self.count() >= 1:
             self.setTabsClosable(True)
         return self.runner
 
     def welcome_tab(self):
-        self.addTab(WelcomeTab(), self.test_icon, 'Open')
-
-
-class Runner(QFrame):
-
-    def __init__(self):
-        QFrame.__init__(self)
-        self.layout = QHBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-        self.stream = QPlainTextEdit()
-        self.stream.setObjectName('stream')
-        # self.stream.setEnabled(False)
-        self.layout.addWidget(self.stream)
-
-    def add_text(self, text):
-        self.stream.appendPlainText(text)
+        self.addTab(WelcomeTab(), Images.APP_ICON, 'Open')

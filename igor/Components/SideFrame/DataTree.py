@@ -108,10 +108,8 @@ class DataTree(QTreeWidget):
             child = QTreeWidgetItem()
             if isinstance(children, TestDataDirectory):
                 child = FolderWidget(children)
-                child.setIcon(0, Images.FOLDER_ICON)
             if isinstance(children, TestCaseFile):
                 child = FileWidget(children)
-                child.setIcon(0, Images.TEST_CASE_FILE_ICON)
             child.setText(0, children.name)
             if children.children or children.testcase_table:
                 self.get_child_data(children, child, tests_data, keywords_data, variable_data)
@@ -131,7 +129,6 @@ class DataTree(QTreeWidget):
     def add_test_case(self, test, root):
         self.test_dict[test.name] = test
         child = TestWidget(test)
-        child.setIcon(0, Images.TEST_ICON)
         child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
         child.setCheckState(0, Qt.Unchecked)
         child.setText(0, test.name)
@@ -140,7 +137,6 @@ class DataTree(QTreeWidget):
     def add_keyword(self, keyword, root):
         self.test_dict[keyword.name] = keyword
         child = KeywordWidget(keyword)
-        child.setIcon(0, Images.KEYWORD_ICON)
         child.setText(0, keyword.name)
         root.addChild(child)
 
@@ -149,14 +145,12 @@ class DataTree(QTreeWidget):
         text = keyword.replace('_', ' ')
         text = text.title()
         child = KeywordWidget(keyword)
-        child.setIcon(0, Images.KEYWORD_ICON)
         child.setText(0, text)
         root.addChild(child)
 
     def add_variable(self, variable, root):
         self.test_dict[variable.name] = variable
         child = TestWidget(variable)
-        child.setIcon(0, Images.VARIABLE_ICON)
         child.setText(0, variable.name)
         root.addChild(child)
 
@@ -179,15 +173,13 @@ class DataTree(QTreeWidget):
                              [Screenshot.Screenshot, 'ScreenShot'],
                              [XML.XML, 'XML']]
 
-        self.libraries = QTreeWidgetItem()
+        self.libraries = LibraryFolderWidget()
         self.libraries.setText(0, 'Libraries')
-        self.libraries.setIcon(0, Images.PYTHON_ICON)
         self.addTopLevelItem(self.libraries)
 
         for library in default_libraries:
-            library_root = QTreeWidgetItem()
+            library_root = LibraryWidget()
             library_root.setText(0, library[1])
-            library_root.setIcon(0, Images.PYTHON_ICON)
             self.libraries.addChild(library_root)
             for func in self.import_library(library[0]):
                 self.add_library_keyword(func, library_root)
@@ -201,15 +193,23 @@ class DataTree(QTreeWidget):
 
             item = self.itemAt(event.pos())
             if isinstance(item, TestWidget):
-                TestMenu(event, item)
+                TestMenu(self, event, item)
             if isinstance(item, FileWidget):
                 TestFileMenu(self, event, item)
 
 
 class TestMenu(QMenu):
 
-    def __init__(self, event, item):
+    def __init__(self,parent, event, item):
+        """
+
+                :type parent: DataTree
+                :param event:
+                :type item: TestWidget
+                """
+
         QMenu.__init__(self)
+        self.tree = parent
         self.event = event
         self.item = item
         self.setStyleSheet(style_sheet)
@@ -218,6 +218,7 @@ class TestMenu(QMenu):
         self.addAction(create_file)
 
         delete_file = QAction('Delete test case')
+        delete_file.setIcon(Images.DELETE_ICON)
         delete_file.triggered.connect(self.delete)
         self.addAction(delete_file)
 
@@ -228,6 +229,7 @@ class TestMenu(QMenu):
         test_table = self.item.test_data.parent
         test_file = self.item.test_data.parent.parent
 
+        self.item.parent().removeChild(self.item)
         test_table.tests.remove(test)
         test_file.save()
 
@@ -275,6 +277,7 @@ class TestWidget(QTreeWidgetItem):
     def __init__(self, test_data):
         QTreeWidgetItem.__init__(self)
         self.test_data = test_data
+        self.setIcon(0, Images.TEST_ICON)
 
 
 class KeywordWidget(QTreeWidgetItem):
@@ -282,6 +285,7 @@ class KeywordWidget(QTreeWidgetItem):
     def __init__(self, test_data):
         QTreeWidgetItem.__init__(self)
         self.test_data = test_data
+        self.setIcon(0, Images.KEYWORD_ICON)
 
 
 class VariableWidget(QTreeWidgetItem):
@@ -289,6 +293,7 @@ class VariableWidget(QTreeWidgetItem):
     def __init__(self, test_data):
         QTreeWidgetItem.__init__(self)
         self.test_data = test_data
+        self.setIcon(0, Images.VARIABLE_ICON)
 
 
 class FolderWidget(QTreeWidgetItem):
@@ -296,6 +301,7 @@ class FolderWidget(QTreeWidgetItem):
     def __init__(self, test_data):
         QTreeWidgetItem.__init__(self)
         self.test_data = test_data
+        self.setIcon(0, Images.FOLDER_ICON)
 
 
 class FileWidget(QTreeWidgetItem):
@@ -303,3 +309,18 @@ class FileWidget(QTreeWidgetItem):
     def __init__(self, test_data):
         QTreeWidgetItem.__init__(self)
         self.test_data = test_data
+        self.setIcon(0, Images.TEST_CASE_FILE_ICON)
+
+
+class LibraryFolderWidget(QTreeWidgetItem):
+
+    def __init__(self):
+        QTreeWidgetItem.__init__(self)
+        self.setIcon(0, Images.LIBRARIES_ICON)
+
+
+class LibraryWidget(QTreeWidgetItem):
+
+    def __init__(self):
+        QTreeWidgetItem.__init__(self)
+        self.setIcon(0, Images.PYTHON_ICON)

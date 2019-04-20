@@ -52,13 +52,14 @@ class BootLoader:
             self.configuration = json.load(json_file)
         config = Config()
         config.load_configuration()
+        self.window.setFont(MainFont.FONT)
 
     def load_main_window(self):
         self.app = MainWindow(Config.CURRENT_PROJECT_PATH)
 
     def start_application(self):
         self.window = QApplication([])
-        self.window.setFont(MainFont.FONT)
+
 
 
     @staticmethod

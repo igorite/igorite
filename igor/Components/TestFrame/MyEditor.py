@@ -40,7 +40,7 @@ class TextEdit(QTextEdit):
 
         self.highlighter = RobotFrameworkHighlighter(self)
         self.font = MainFont.FONT
-        self.font.setPointSize(14)
+        self.font.setPointSize(12)
 
         self.setFont(self.font)
         self._completer = None

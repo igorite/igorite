@@ -69,6 +69,8 @@ class DataTree(QTreeWidget):
         self.font.setPointSize(10)
         self.setFont(self.font)
 
+        self.itemChanged.connect(self.item_changed)
+
     def open_project(self, project_path):
         """
         This function open a project and fill the Tree with data
@@ -108,8 +110,10 @@ class DataTree(QTreeWidget):
             child = QTreeWidgetItem()
             if isinstance(children, TestDataDirectory):
                 child = FolderWidget(children)
+                child.setFlags(child.flags() | Qt.ItemIsEditable)
             if isinstance(children, TestCaseFile):
                 child = FileWidget(children)
+                child.setFlags(child.flags() | Qt.ItemIsEditable)
             child.setText(0, children.name)
             if children.children or children.testcase_table:
                 self.get_child_data(children, child, tests_data, keywords_data, variable_data)
@@ -129,7 +133,7 @@ class DataTree(QTreeWidget):
     def add_test_case(self, test, root):
         self.test_dict[test.name] = test
         child = TestWidget(test)
-        child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable)
+        child.setFlags(child.flags() | Qt.ItemIsTristate | Qt.ItemIsUserCheckable | Qt.ItemIsEditable)
         child.setCheckState(0, Qt.Unchecked)
         child.setText(0, test.name)
         root.addChild(child)
@@ -197,10 +201,19 @@ class DataTree(QTreeWidget):
             if isinstance(item, FileWidget):
                 TestFileMenu(self, event, item)
 
+    def item_changed(self, item):
+        self.blockSignals(True)
+        if item.text(0) != item.test_data.name:
+            if item.text(0) is '':
+                item.setText(0, item.test_data.name)
+            else:
+                item.test_data.name = item.text(0)
+                item.test_data.parent.parent.save()
+
 
 class TestMenu(QMenu):
 
-    def __init__(self,parent, event, item):
+    def __init__(self, parent, event, item):
         """
 
                 :type parent: DataTree
@@ -214,15 +227,20 @@ class TestMenu(QMenu):
         self.item = item
         self.setStyleSheet(style_sheet)
 
-        create_file = QAction('Rename')
-        self.addAction(create_file)
+        rename_test = QAction('Rename')
+        rename_test.setIcon(Images.RENAME_ICON)
+        rename_test.triggered.connect(self.rename)
+        self.addAction(rename_test)
 
-        delete_file = QAction('Delete test case')
-        delete_file.setIcon(Images.DELETE_ICON)
-        delete_file.triggered.connect(self.delete)
-        self.addAction(delete_file)
+        delete_test = QAction('Delete Test Case')
+        delete_test.setIcon(Images.DELETE_ICON)
+        delete_test.triggered.connect(self.delete)
+        self.addAction(delete_test)
 
         self.action = self.exec_(self.mapToGlobal(event.pos()))
+
+    def rename(self):
+        self.tree.editItem(self.item)
 
     def delete(self):
         test = self.item.test_data

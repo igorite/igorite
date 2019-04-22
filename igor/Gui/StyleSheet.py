@@ -31,6 +31,11 @@ style_sheet = """
     border: 1px solid #606060;
     padding: 5px;
     }
+    
+    QPushButton::hover{
+    background-color: #303030;
+
+    }
 
         QMenuBar::item::selected {
             background-color: #303030;
@@ -282,6 +287,7 @@ QScrollBar::add-line:horizontal {
  QScrollBar::sub-line:horizontal {
   border: 1px solid grey;
     background-color: rgb(241, 241, 241);
+    background-color: rgb(241, 241, 241);
     height: 20px;
     subcontrol-position: left;
     subcontrol-origin: margin;
@@ -301,8 +307,12 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      background: none;
 }
 CustomCheckBox{
-    background-color: #500000;
+    background-color: #30303000;
     border: 0px
 }
 
+CustomCheckBox::hover{
+    background-color: #15151500;
+    border: 0px
+}
 """

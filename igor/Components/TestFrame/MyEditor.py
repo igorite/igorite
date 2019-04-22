@@ -12,20 +12,73 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ----------------------------------
+# Imports
+# ----------------------------------
+
 from os import path
 
 from PyQt5.QtCore import Qt, QRegExp
 from PyQt5.QtGui import (QTextCursor, QStandardItemModel, QStandardItem, QIcon, QFont,
                          QSyntaxHighlighter, QTextCharFormat)
-from PyQt5.QtWidgets import QCompleter, QTextEdit, QFrame
+from PyQt5.QtWidgets import QCompleter, QTextEdit, QFrame, QVBoxLayout, QPushButton
 from igor.Gui.StyleSheet import style_sheet
 from igor.Components.Core.Configuration import MainFont
+from igor.Components.images.Images import Images
+# ----------------------------------
 
 
 class TextEditorFrame(QFrame):
 
-    def __init__(self):
+    def __init__(self, test_data):
+        # ----------------------------------
+        # Initialize frame and Variables
+        # ----------------------------------
         QFrame.__init__(self)
+        self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.layout)
+        self.test_data = test_data
+
+        # ----------------------------------
+        # Add Toolbar widget
+        # ----------------------------------
+
+        self.menu = TextEditorToolBar(self)
+        self.layout.addWidget(self.menu)
+
+        # ----------------------------------
+        # Add Editor widget
+        # ----------------------------------
+        self.editor = TextEdit(self.test_data)
+        self.layout.addWidget(self.editor)
+
+
+class TextEditorToolBar(QFrame):
+
+    def __init__(self, parent):
+        # ----------------------------------
+        # Initialize frame and Variables
+        # ----------------------------------
+        QFrame.__init__(self)
+        self.parent = parent
+        self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.layout)
+        # ----------------------------------
+        # Save Editor
+        # ----------------------------------
+
+        self.button = QPushButton()
+        self.button.setIcon(Images.SAVE_ICON)
+        self.button.setFixedSize(30, 30)
+        self.button.clicked.connect(self.save_changes)
+        self.layout.addWidget(self.button)
+
+    def save_changes(self):
+        file = self.parent.test_data.source
+        with open(file, 'w') as f:
+            f.write(self.parent.editor.toPlainText())
 
 
 class TextEdit(QTextEdit):
@@ -34,10 +87,10 @@ class TextEdit(QTextEdit):
         super(TextEdit, self).__init__(parent)
         self.test_data = test_data
         self.path = path.abspath(path.dirname(__file__))
-        with open(test_data.parent.source) as f:
+        self.source_file = test_data.parent.source
+        with open(self.source_file) as f:
             file = f.read()
             self.append(str(file))
-
         self.highlighter = RobotFrameworkHighlighter(self)
         self.font = MainFont.FONT
         self.font.setPointSize(12)

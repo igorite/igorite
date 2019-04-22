@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QTabWidget
-from igor.Components.TestFrame.MyEditor import TextEdit
+from igor.Components.TestFrame.MyEditor import TextEditorFrame
 
 
 class TestTabPanel(QTabWidget):
 
     def __init__(self, test_data):
         QTabWidget.__init__(self)
-        self.addTab(TextEdit(test_data, self), 'Steps')
+        self.addTab(TextEditorFrame(test_data), 'Steps')

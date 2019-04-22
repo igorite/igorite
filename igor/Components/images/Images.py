@@ -20,6 +20,8 @@ class Images:
     DELETE_ICON = None
     LIBRARIES_ICON = None
     RENAME_ICON = None
+    SIMPLE_ARROW_UP_ICON = None
+    SIMPLE_ARROW_DOWN_ICON = None
 
     def __init__(self):
         Images.TEST_CASE_FILE_ICON = QIcon(path.join(Images.PATH, 'test_case_file_icon.png'))
@@ -37,3 +39,5 @@ class Images:
         Images.DELETE_ICON = QIcon(path.join(Images.PATH, 'delete_icon.png'))
         Images.LIBRARIES_ICON = QIcon(path.join(Images.PATH, 'libraries_icon.png'))
         Images.RENAME_ICON = QIcon(path.join(Images.PATH, 'rename_icon.png'))
+        Images.SIMPLE_ARROW_UP_ICON = QIcon(path.join(Images.PATH, 'simple_arrow_up_icon.png'))
+        Images.SIMPLE_ARROW_DOWN_ICON = QIcon(path.join(Images.PATH, 'simple_arrow_down_icon.png'))

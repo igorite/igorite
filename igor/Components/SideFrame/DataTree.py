@@ -220,23 +220,46 @@ class TestMenu(QMenu):
                 :param event:
                 :type item: TestWidget
                 """
+        # ----------------------------------
+        # Initialize Menu
+        # ----------------------------------
 
         QMenu.__init__(self)
         self.tree = parent
         self.event = event
         self.item = item
         self.setStyleSheet(style_sheet)
+        # ----------------------------------
+        # Create Menu actions
+        # ----------------------------------
 
         rename_test = QAction('Rename')
         rename_test.setIcon(Images.RENAME_ICON)
         rename_test.triggered.connect(self.rename)
         self.addAction(rename_test)
+        # ----------------------------------
 
         delete_test = QAction('Delete Test Case')
         delete_test.setIcon(Images.DELETE_ICON)
         delete_test.triggered.connect(self.delete)
         self.addAction(delete_test)
+        # ----------------------------------
 
+        self.addSeparator()
+        # ----------------------------------
+
+        move_up_test = QAction('Move up')
+        move_up_test.setIcon(Images.SIMPLE_ARROW_UP_ICON)
+        move_up_test.triggered.connect(self.move_up)
+        self.addAction(move_up_test)
+
+        move_down_test = QAction('Move down')
+        move_down_test.setIcon(Images.SIMPLE_ARROW_DOWN_ICON)
+        move_down_test.triggered.connect(self.move_down)
+        self.addAction(move_down_test)
+        # ----------------------------------
+        # Show Menu
+        # ----------------------------------
         self.action = self.exec_(self.mapToGlobal(event.pos()))
 
     def rename(self):
@@ -250,6 +273,39 @@ class TestMenu(QMenu):
         self.item.parent().removeChild(self.item)
         test_table.tests.remove(test)
         test_file.save()
+
+    def move_up(self):
+
+        # Update item position on Tree
+
+        root = self.item.parent()
+        index = root.indexOfChild(self.item)
+        if index is 0:
+            return
+        item = root.takeChild(index)
+        root.insertChild(index-1, item)
+        self.tree.clearSelection()
+        item.setSelected(True)
+
+    def move_down(self):
+
+        # Update item position on Tree
+        root = self.item.parent()
+        index = root.indexOfChild(self.item)
+        if index is root.childCount() - 1:
+            return
+        item = root.takeChild(index)
+        root.insertChild(index + 1, item)
+        self.tree.clearSelection()
+        item.setSelected(True)
+
+        # Update item position on Robot Framework
+        list_test = item.test_data.parent.tests
+        if index >= len(item.test_data.parent.tests):
+            return
+        list_test.insert(index + 1, list_test.pop(index))
+
+        item.test_data.parent.parent.save()
 
 
 class TestFileMenu(QMenu):

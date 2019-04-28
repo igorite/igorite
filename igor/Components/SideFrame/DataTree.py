@@ -154,7 +154,7 @@ class DataTree(QTreeWidget):
 
     def add_variable(self, variable, root):
         self.test_dict[variable.name] = variable
-        child = TestWidget(variable)
+        child = VariableWidget(variable)
         child.setText(0, variable.name)
         root.addChild(child)
 
@@ -323,7 +323,7 @@ class TestFileMenu(QMenu):
         self.item = item
         self.setStyleSheet(style_sheet)
 
-        create_file = QAction('Create Test')
+        create_file = QAction('Create Test case')
         create_file.triggered.connect(self.add_test)
         self.addAction(create_file)
 
@@ -331,12 +331,20 @@ class TestFileMenu(QMenu):
         delete_file.triggered.connect(self.delete)
         self.addAction(delete_file)
 
+        add_keyword = QAction('Add custom keyword')
+        add_keyword.triggered.connect(self.create_keyword)
+        self.addAction(add_keyword)
+
+        add_variable = QAction('Add custom variable')
+        add_variable.triggered.connect(self.create_variable)
+        self.addAction(add_variable)
+
         self.action = self.exec_(self.mapToGlobal(event.pos()))
 
     def delete(self):
-        test = self.item.test_data
-        print(test.source)
-        print(test)
+        test = self.item.test_data.source
+        os.remove(test)
+        self.item.parent().removeChild(self.item)
 
     def add_test(self):
         test_file = self.item.test_data
@@ -344,6 +352,16 @@ class TestFileMenu(QMenu):
         test = test_file_test_table.add('hola')
         test_file.save()
         self.tree.add_test_case(test, self.item)
+
+    def create_keyword(self):
+        test_file = self.item.test_data
+        test_file_keys_table = self.item.test_data.keyword_table
+        test = test_file_keys_table.add('hola')
+        test_file.save()
+        self.tree.add_keyword(test, self.item)
+
+    def create_variable(self):
+        pass
 
 
 class TestWidget(QTreeWidgetItem):

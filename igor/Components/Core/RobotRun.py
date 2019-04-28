@@ -3,7 +3,7 @@ from robot.run import run
 
 
 class RobotRun(QThread):
-    signal = pyqtSignal(str)
+    signal = pyqtSignal(list)
 
     def __init__(self, test_data):
         QThread.__init__(self)
@@ -20,52 +20,54 @@ class RunnerListener:
         self.stream = signal
 
     def start_suite(self, name, attributes):
-        pass
+        self.stream.emit(['start_suite', name, attributes])
 
     def end_suite(self, name, attributes):
-        pass
+        self.stream.emit(['end_test', name, attributes])
 
     def start_test(self, name, attributes):
-        self.stream.emit(str(attributes['starttime']) + ' ::INFO:: ' + str(attributes['longname']))
+        self.stream.emit(['start_test', name, attributes])
 
     def end_test(self, name, attributes):
-        pass
+        self.stream.emit(['end_test', name, attributes])
 
     def start_keyword(self, name, attributes):
-        self.stream.emit(str(attributes['starttime']) + ' ::INFO:: ' + str(attributes['kwname']))
+        self.stream.emit(['start_keyword', name, attributes])
 
     def end_keyword(self, name, attributes):
-        pass
+        self.stream.emit(['end_keyword', name, attributes])
 
     def log_message(self, message):
-        pass
+        self.stream.emit(['log_message', message])
 
     def message(self, message):
-        pass
+        self.stream.emit(['message', message])
 
     def library_import(self, name, attributes):
-        pass
+        self.stream.emit(['library_import', name, attributes])
 
     def resource_import(self, name, attributes):
+        self.stream.emit(['resource_import', name, attributes])
         pass
 
     def variable_import(self, name, attributes):
+        self.stream.emit(['variable_import', name, attributes])
         pass
 
     def output_file(self, path):
-        pass
+        self.stream.emit(['output_file', path])
 
     def log_file(self, path):
-        pass
+        self.stream.emit(['log_file', path])
 
     def report_file(self, path):
-        pass
+        self.stream.emit(['report_file', path])
 
     def xunit_file(self, path):
-        pass
+        self.stream.emit(['xunit_file', path])
 
     def debug_file(self, path):
-        pass
+        self.stream.emit(['debug_file', path])
 
     def close(self):
-        pass
+        self.stream.emit(['close'])

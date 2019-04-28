@@ -125,8 +125,6 @@ class MainWindow(QMainWindow):
     def git_show_log(self):
         self.git_manager = GitLogWindow()
 
-
-
     @staticmethod
     def closeEvent(event, **kwargs):
         """Generate 'question' dialog on clicking 'X' button in title bar.
